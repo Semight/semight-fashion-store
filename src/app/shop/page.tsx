@@ -1,12 +1,10 @@
 "use client"
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/NavBar";
-import Products from "@/components/Products/Products";
 import React, { useState } from "react";
 import Product1 from "@/assets/shoes_bags1.jpeg"
 import Product2 from "@/assets/shoes_bags2.jpeg"
 import Product3 from "@/assets/shoes_bags3.jpeg"
-import { getImageUrl } from "@/utils/imageUtils";
 import Image from "next/image";
 import Link from "next/link";
 
