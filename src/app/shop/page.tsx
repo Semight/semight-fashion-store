@@ -10,7 +10,6 @@ import { getImageUrl } from "@/utils/imageUtils";
 import Image from "next/image";
 import Link from "next/link";
 
-// Dummy product data (you can replace this with actual data fetched from an API)
 const allProducts = [
   { id: '1', name: 'Product 1', price: '$49.99', image: Product1, category: 'men' },
   { id: '2', name: 'Product 2', price: '$59.99', image: Product2, category: 'women' },
