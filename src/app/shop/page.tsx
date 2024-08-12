@@ -2,9 +2,9 @@
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/NavBar";
 import React, { useState } from "react";
-import Product1 from "@/assets/shoes_bags1.jpeg"
+import Product1 from "@/assets/men_wear1.jpeg"
 import Product2 from "@/assets/women_bag.jpeg"
-import Product3 from "@/assets/women_bags.jpeg"
+import Product3 from "@/assets/kid.jpg"
 import Image from "next/image";
 import Link from "next/link";
 
