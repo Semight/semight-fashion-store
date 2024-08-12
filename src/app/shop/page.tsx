@@ -3,8 +3,8 @@ import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/NavBar";
 import React, { useState } from "react";
 import Product1 from "@/assets/shoes_bags1.jpeg"
-import Product2 from "@/assets/shoes_bags2.jpeg"
-import Product3 from "@/assets/shoes_bags3.jpeg"
+import Product2 from "@/assets/women_bag.jpeg"
+import Product3 from "@/assets/women_bags.jpeg"
 import Image from "next/image";
 import Link from "next/link";
 
