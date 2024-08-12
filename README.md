@@ -1,4 +1,5 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# semight-fashion-store
+This is a modern e-commerce platform for fashion enthusiasts, offering a wide range of clothing and accessories for men, women, and children. The website includes a fully functional shopping cart, user authentication, and an intuitive admin dashboard for product management. Built with Next.js, React, and TypeScript, the platform also features responsive design, real-time updates, and seamless navigation.
 
 ## Getting Started
 
