@@ -1,8 +1,8 @@
 import { StaticImageData } from "next/image";
 import Men1 from "@/assets/men_wear1.jpeg"
 import Men2 from "@/assets/men_wears2.jpeg";
-import Women1 from "@/assets/Shoes_bags3.jpeg"
-import women2 from "@/assets/Shoes_bags4.jpeg"
+import Women1 from "@/assets/women_bag.jpeg"
+import women2 from "@/assets/women_bags.jpeg"
 import Kid from "@/assets/kid.jpg"
 
 export interface Product {

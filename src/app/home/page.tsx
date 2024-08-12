@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from "next/link";
 import BG1 from "@/assets/bg-1.jpg";
 import Men from "@/assets/men_wear1.jpeg"
-import women from "@/assets/shoes_bags4.jpeg"
+import women from "@/assets/shoe_bag.jpeg"
 import Kids from "@/assets/kid.jpg"
 import Product1 from "@/assets/shoes_bags1.jpeg"
 import Product2 from "@/assets/women_bag.jpeg"
