@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import { Modal, Button, Form } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 interface Product {
   id: string;
@@ -11,7 +9,7 @@ interface Product {
   description: string;
   images: string[];
   sizes: string[];
-  category: string; // New property for category
+  category: string;
 }
 
 const fetchProducts = async () => {
@@ -41,7 +39,7 @@ const ProductsSection: React.FC = () => {
     description: "",
     images: [],
     sizes: [],
-    category: "", // Initialize category
+    category: "",
   });
 
   useEffect(() => {
@@ -64,7 +62,7 @@ const ProductsSection: React.FC = () => {
       description: "",
       images: [],
       sizes: [],
-      category: "", // Reset category
+      category: "",
     });
   };
 
@@ -102,10 +100,10 @@ const ProductsSection: React.FC = () => {
   };
 
   return (
-    <div className="no-underline">
+    <div className="p-4">
       <h2 className="text-2xl font-bold mb-4">Products</h2>
       <button
-        className="mb-4 py-2 px-4 bg-[#E5B80D] text-white rounded flex items-center"
+        className="mb-4 py-2 px-4 bg-secondary text-white rounded flex items-center"
         onClick={() => setShowModal(true)}
       >
         <AiOutlinePlus className="mr-2" /> Add New Product
@@ -131,123 +129,135 @@ const ProductsSection: React.FC = () => {
               <td className="p-2 border-b">{product.sizes.join(", ")}</td>
               <td className="p-2 border-b">{product.category}</td>
               <td className="p-2 border-b">
-                <button className="text-blue">Edit</button>
-                <button className="text-danger ml-4">Delete</button>
+                <button className="text-secondary hover:underline">Edit</button>
+                <button className="text-danger hover:underline ml-4">Delete</button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      {/* Modal for adding a new product */}
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add New Product</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form>
-            <Form.Group controlId="formProductName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter product name"
-                value={newProduct.name}
-                onChange={(e) =>
-                  setNewProduct((prevProduct) => ({
-                    ...prevProduct,
-                    name: e.target.value,
-                  }))
-                }
-              />
-            </Form.Group>
-            <Form.Group controlId="formProductPrice">
-              <Form.Label>Price</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Enter product price"
-                value={newProduct.price}
-                onChange={(e) =>
-                  setNewProduct((prevProduct) => ({
-                    ...prevProduct,
-                    price: e.target.value,
-                  }))
-                }
-              />
-            </Form.Group>
-            <Form.Group controlId="formProductDescription">
-              <Form.Label>Description</Form.Label>
-              <Form.Control
-                as="textarea"
-                placeholder="Enter product description"
-                value={newProduct.description}
-                onChange={(e) =>
-                  setNewProduct((prevProduct) => ({
-                    ...prevProduct,
-                    description: e.target.value,
-                  }))
-                }
-              />
-            </Form.Group>
-            <Form.Group controlId="formProductImages">
-              <Form.Label>Images</Form.Label>
-              <Form.Control type="file" multiple onChange={handleImageChange} />
-              <div className="mt-3">
-                {newProduct.images.map((image, index) => (
-                  <div key={index} className="d-inline-block mr-2">
-                    <img
-                      src={image}
-                      alt={`Preview ${index}`}
-                      style={{ width: 100, height: 100, objectFit: "cover" }}
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-danger btn-sm mt-1"
-                      onClick={() => handleRemoveImage(index)}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 mt-[5rem]">
+          <div className="bg-white rounded-lg overflow-hidden w-1/2">
+            <div className="flex justify-between items-center p-4 border-b">
+              <h3 className="text-lg font-semibold">Add New Product</h3>
+              <button onClick={() => setShowModal(false)} className="text-light-black-4 hover:text-light-black-3">
+                &times;
+              </button>
+            </div>
+            <div className="p-4 overflow-y-auto max-h-96">
+              <div className="mb-4">
+                <label className="block text-black">Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter product name"
+                  value={newProduct.name}
+                  onChange={(e) =>
+                    setNewProduct((prevProduct) => ({
+                      ...prevProduct,
+                      name: e.target.value,
+                    }))
+                  }
+                  className="mt-1 p-2 border rounded w-full"
+                />
               </div>
-            </Form.Group>
-            <Form.Group controlId="formProductSizes">
-              <Form.Label>Sizes</Form.Label>
-              <select
-                value={newProduct.sizes[0] || ""}
-                onChange={handleSizeChange}
-                className="form-control"
+              <div className="mb-4">
+                <label className="block text-black">Price</label>
+                <input
+                  type="text"
+                  placeholder="Enter product price"
+                  value={newProduct.price}
+                  onChange={(e) =>
+                    setNewProduct((prevProduct) => ({
+                      ...prevProduct,
+                      price: e.target.value,
+                    }))
+                  }
+                  className="mt-1 p-2 border rounded w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-black">Description</label>
+                <textarea
+                  placeholder="Enter product description"
+                  value={newProduct.description}
+                  onChange={(e) =>
+                    setNewProduct((prevProduct) => ({
+                      ...prevProduct,
+                      description: e.target.value,
+                    }))
+                  }
+                  className="mt-1 p-2 border rounded w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-black">Images</label>
+                <input type="file" multiple onChange={handleImageChange} className="mt-1" />
+                <div className="mt-3 flex space-x-2">
+                  {newProduct.images.map((image, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={image}
+                        alt={`Preview ${index}`}
+                        className="w-24 h-24 object-cover"
+                      />
+                      <button
+                        type="button"
+                        className="absolute top-0 right-0 bg-danger text-white w-4 h-4 flex justify-center items-center rounded-3xl"
+                        onClick={() => handleRemoveImage(index)}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="block text-black">Sizes</label>
+                <select
+                  value={newProduct.sizes[0] || ""}
+                  onChange={handleSizeChange}
+                  className="mt-1 p-2 border rounded w-full"
+                >
+                  <option value="">Select Size</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-black">Category</label>
+                <select
+                  value={newProduct.category}
+                  onChange={handleCategoryChange}
+                  className="mt-1 p-2 border rounded w-full"
+                >
+                  <option value="">Select Category</option>
+                  <option value="Men">Men</option>
+                  <option value="Women">Women</option>
+                  <option value="Kid">Kid</option>
+                </select>
+              </div>
+            </div>
+            <div className="flex justify-end p-4 border-t">
+              <button
+                className="px-4 py-2 bg-danger text-white rounded mr-2"
+                onClick={() => setShowModal(false)}
               >
-                <option value="">Select Size</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-              </select>
-            </Form.Group>
-            <Form.Group controlId="formProductCategory">
-              <Form.Label>Category</Form.Label>
-              <select
-                value={newProduct.category}
-                onChange={handleCategoryChange}
-                className="form-control"
+                Close
+              </button>
+              <button
+                className="px-4 py-2 bg-secondary text-white rounded"
+                onClick={handleAddProduct}
               >
-                <option value="">Select Category</option>
-                <option value="Men">Men</option>
-                <option value="Women">Women</option>
-                <option value="Kid">Kid</option>
-              </select>
-            </Form.Group>
-          </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleAddProduct}>
-            Add Product
-          </Button>
-        </Modal.Footer>
-      </Modal>
+                Add Product
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

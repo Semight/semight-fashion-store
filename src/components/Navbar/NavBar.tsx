@@ -60,7 +60,7 @@ const Navbar: React.FC = () => {
           </div>
           <div className="hidden md:block">
             {!loggedIn ? (
-              <Link href="/login" className="py-2 px-4 rounded-md text-white bg-[#E5B80D] no-underline text-lg font-semibold font-merriweather">Login</Link>
+              <Link href="/login" className="py-2 px-4 rounded-md text-white bg-secondary no-underline text-lg font-semibold font-merriweather">Login</Link>
             ) : (
               <div className="flex items-center space-x-4">
                 <div
@@ -70,10 +70,10 @@ const Navbar: React.FC = () => {
                 >
                   <p>{username}</p>
                   {isOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-300 rounded shadow-lg">
-                      <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
-                      <Link href="/settings" className="block px-4 py-2 hover:bg-gray-100">Settings</Link>
-                      <button onClick={logout} className="block w-full bg-[#E5B80D] text-left px-4 py-2 hover:bg-light-yellow">Logout</button>
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-secondary rounded shadow-lg">
+                      <Link href="/profile" className="block px-4 py-2 hover:bg-light-yellow">Profile</Link>
+                      <Link href="/settings" className="block px-4 py-2 hover:bg-light-yellow">Settings</Link>
+                      <button onClick={logout} className="block w-full bg-secondary text-left px-4 py-2 hover:bg-light-yellow">Logout</button>
                     </div>
                   )}
                 </div>
@@ -82,7 +82,7 @@ const Navbar: React.FC = () => {
             )}
           </div>
           <div className="md:hidden">
-            <button onClick={() => setMenuOpen(!menuOpen)} className="text-[#E5B80D] focus:outline-none">
+            <button onClick={() => setMenuOpen(!menuOpen)} className="text-secondary focus:outline-none">
               {menuOpen ? <AiOutlineClose className="h-6 w-6" /> : <GiHamburgerMenu className="h-6 w-6" />}
             </button>
           </div>
@@ -95,7 +95,7 @@ const Navbar: React.FC = () => {
             <Link href="/cart" className="block px-4 py-2 text-black hover:bg-light-black-4">Cart</Link>
             <Link href="/about" className="block px-4 py-2 text-black hover:bg-light-black-4">About</Link>
             {!loggedIn ? (
-              <Link href="/login" className="mt-4 flex justify-center py-2 px-4 rounded-md text-white bg-[#E5B80D] text-lg font-semibold font-merriweather">Login</Link>
+              <Link href="/login" className="mt-4 flex justify-center py-2 px-4 rounded-md text-white bg-secondary text-lg font-semibold font-merriweather">Login</Link>
             ) : (
               <div className="px-4 py-2">
                 <div className="flex items-center justify-between">
