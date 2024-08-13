@@ -31,12 +31,12 @@ const Shop = () => {
       <div className="h-44"></div>
       <div className="flex px-24">
         {/* Sidebar for Categories */}
-        <aside className="w-1/4 p-4 bg-gray-200">
+        <aside className="w-1/4 p-4 bg-secondary">
           <h2 className="text-xl font-semibold mb-4">Categories</h2>
           <ul>
             <li>
               <button
-                className={`block p-2 w-full text-left ${selectedCategory === null ? 'bg-blue text-white' : 'bg-light-black-2'}`}
+                className={`block p-2 w-full text-left ${selectedCategory === null ? 'bg-black text-white' : 'bg-white'}`}
                 onClick={() => setSelectedCategory(null)}
               >
                 All
@@ -44,7 +44,7 @@ const Shop = () => {
             </li>
             <li>
               <button
-                className={`block p-2 w-full text-left ${selectedCategory === 'men' ? 'bg-blue text-white' : 'bg-light-black-2'}`}
+                className={`block p-2 w-full text-left ${selectedCategory === 'men' ? 'bg-black text-white' : 'bg-white'}`}
                 onClick={() => setSelectedCategory('men')}
               >
                 Men
@@ -52,7 +52,7 @@ const Shop = () => {
             </li>
             <li>
               <button
-                className={`block p-2 w-full text-left ${selectedCategory === 'women' ? 'bg-blue text-white' : 'bg-light-black-2'}`}
+                className={`block p-2 w-full text-left ${selectedCategory === 'women' ? 'bg-black text-white' : 'bg-white'}`}
                 onClick={() => setSelectedCategory('women')}
               >
                 Women
@@ -60,7 +60,7 @@ const Shop = () => {
             </li>
             <li>
               <button
-                className={`block p-2 w-full text-left ${selectedCategory === 'kids' ? 'bg-blue text-white' : 'bg-light-black-2'}`}
+                className={`block p-2 w-full text-left ${selectedCategory === 'kids' ? 'bg-black text-white' : 'bg-white'}`}
                 onClick={() => setSelectedCategory('kids')}
               >
                 Kids
@@ -86,7 +86,7 @@ const Shop = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
-                  <div key={product.id} className="bg-white p-6 rounded-lg shadow-md">
+                  <div key={product.id} className="bg-white p-6 rounded-lg shadow-custom">
                     <Link href={`/products/${product.id}`}>
                     <Image
                       src={product.image}

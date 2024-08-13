@@ -22,7 +22,7 @@ const Checkout = () => {
                 <h2 className="text-lg font-semibold">{item.product.name}</h2>
                 <p className="text-light-black-7">{item.product.price}</p>
                 <p className="text-light-black-7">Quantity: {item.quantity}</p>
-                {item.size && <p className="text-light-black-7">Size: {item.size}</p>}
+                {item.size && <p className="text-light-secondary">Size: {item.size}</p>}
               </div>
             </div>
           </div>
@@ -30,7 +30,7 @@ const Checkout = () => {
       </div>
 
       <button
-        className="mt-8 py-2 px-4 rounded-md text-white bg-blue hover:bg-primary-1"
+        className="mt-8 py-2 px-4 rounded-md text-white bg-secondary hover:bg-light-yellow"
         onClick={handleCheckout}
       >
         Confirm Payment

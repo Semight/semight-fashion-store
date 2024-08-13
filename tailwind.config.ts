@@ -25,6 +25,7 @@ module.exports = {
       // => @media (min-width: 1536px) { ... }
     },
     colors: {
+      secondary: "#E5B80B",
       white: "#fff",
       "white-1": "#F5F5F5",
       "white-2": "#F1FFF2",
@@ -77,15 +78,18 @@ module.exports = {
     fontFamily: {
       merriweather: ['Merriweather', 'serif'],
     },
-    // extend: {
-    //   spacing: {
-    //     "8xl": "96rem",
-    //     "9xl": "128rem",
-    //   },
-    //   borderRadius: {
-    //     "4xl": "2rem",
-    //   },
-    // },
+    extend: {
+      boxShadow: {
+        'custom': '0 0 10px rgba(0,0,0,0.3)'
+      }
+      // spacing: {
+      //   "8xl": "96rem",
+      //   "9xl": "128rem",
+      // },
+      // borderRadius: {
+      //   "4xl": "2rem",
+      // },
+    },
   },
   plugins: [],
 };

@@ -37,7 +37,7 @@ const ProductDetail = ({ product }: { product: Product | null }) => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <Link href="/shop" className="text-blue hover:underline">Back to Shop</Link>
+      <Link href="/shop" className="text-secondary hover:underline">Back to Shop</Link>
       <div className="flex flex-col md:flex-row mt-4">
         {/* Main Image */}
         <div className="w-full md:w-1/2">
@@ -67,7 +67,7 @@ const ProductDetail = ({ product }: { product: Product | null }) => {
               {product.sizes.map((sizeOption) => (
                 <button
                   key={sizeOption}
-                  className={`px-4 py-2 border rounded-md ${size === sizeOption ? 'bg-blue text-white' : 'bg-white'}`}
+                  className={`px-4 py-2 border border-secondary text-secondary rounded-md ${size === sizeOption ? 'bg-secondary text-white' : 'bg-white'}`}
                   onClick={() => setSize(sizeOption)}
                 >
                   {sizeOption}
@@ -78,14 +78,14 @@ const ProductDetail = ({ product }: { product: Product | null }) => {
 
           <div className="mt-4 flex items-center">
             <button
-              className="p-2 border rounded-md text-light-black-7"
+              className="p-2 border border-secondary rounded-md text-secondary"
               onClick={() => handleQuantityChange(-1)}
             >
               <AiOutlineMinus />
             </button>
-            <span className="mx-2 text-lg">{quantity}</span>
+            <span className="mx-2 text-lg text-secondary">{quantity}</span>
             <button
-              className="p-2 border rounded-md text-light-black-7"
+              className="p-2 border border-secondary rounded-md text-secondary"
               onClick={() => handleQuantityChange(1)}
             >
               <AiOutlinePlus />
@@ -93,7 +93,7 @@ const ProductDetail = ({ product }: { product: Product | null }) => {
           </div>
 
           <button
-            className="mt-4 py-2 px-4 rounded-md text-white bg-black hover:bg-light-black-5"
+            className="mt-4 py-2 px-4 rounded-md text-white bg-secondary hover:bg-light-yellow-2"
             onClick={handleAddToCart}
           >
             Add to Cart
@@ -114,10 +114,10 @@ const ProductDetail = ({ product }: { product: Product | null }) => {
             <p className="mb-4">You have added {quantity} {product.name}(s) to your cart.</p>
             <div className="flex justify-between mt-4">
               <Link href="/shop">
-                <button className="py-2 px-4 rounded-md text-white bg-blue hover:bg-primary-1">Continue Shopping</button>
+                <button className="py-2 px-4 rounded-md text-white bg-black hover:bg-secondary">Continue Shopping</button>
               </Link>
               <Link href="/cart">
-                <button className="py-2 px-4 rounded-md text-white bg-black hover:bg-primary-1">View Cart and Checkout</button>
+                <button className="py-2 px-4 rounded-md text-white bg-secondary hover:bg-black">View Cart and Checkout</button>
               </Link>
             </div>
           </div>

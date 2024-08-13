@@ -39,7 +39,7 @@ const Cart = () => {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-4">Your Cart</h1>
         <p>Your cart is empty.</p>
-        <Link href="/shop" className="text-blue hover:underline">Back to Shop</Link>
+        <Link href="/shop" className="text-secondary hover:underline">Back to Shop</Link>
       </div>
       </div>
     );
@@ -58,7 +58,7 @@ const Cart = () => {
                   <h2 className="text-lg font-semibold">{item.product.name}</h2>
                   <p className="text-light-black-7">{item.product.price}</p>
                   <p className="text-light-black-7">Quantity: {item.quantity}</p>
-                  {item.size && <p className="text-light-black-7">Size: {item.size}</p>}
+                  {item.size && <p className="text-secondary">Size: {item.size}</p>}
                 </div>
               </div>
               <button
@@ -77,13 +77,13 @@ const Cart = () => {
         <h2 className="text-2xl font-semibold mb-4">Total Amount</h2>
         <p className="text-lg mb-4">${totalAmount.toFixed(2)}</p>
         <button
-          className="py-2 px-4 mb-4 rounded-md text-white bg-red-500 hover:bg-red-600"
+          className="py-1 px-2 mb-4 rounded-md text-white bg-danger"
           onClick={clearCart}
         >
           Clear Cart
         </button>
         <button
-          className="py-2 px-4 rounded-md text-white bg-blue hover:bg-primary-1"
+          className="py-2 px-4 rounded-md text-white bg-secondary hover:bg-light-yellow"
           onClick={handleCheckout}
         >
           Proceed to Checkout
