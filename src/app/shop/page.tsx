@@ -75,7 +75,7 @@ const Shop = () => {
             <input
               type="text"
               placeholder="Search products..."
-              className="p-2 border rounded w-full"
+              className="p-2 border-none rounded w-full"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />

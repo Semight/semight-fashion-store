@@ -16,7 +16,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("http://localhost:8000/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,6 +25,12 @@ const Login = () => {
       });
 
       if (response.ok) {
+        const data = await response.json();
+        const token = data.token;
+
+        localStorage.setItem('authToken', token);
+        console.log('Token stored:', localStorage.getItem('authToken'));
+
         router.push("/cart");
         toast.success("This is a success message!");
       } else {
@@ -49,7 +55,7 @@ const Login = () => {
             <div>
               <p className="text-black font-extrabold text-[20px] md:text-[15px] leading-[15px] font-merriweather">Don't have an account?</p>
             <Link
-              className="text-black font-semibold text-[12px] md:text-[12px] underline leading-[15px] font-merriweather"
+              className="text-secondary font-semibold text-[12px] md:text-[12px] underline leading-[15px] font-merriweather"
               href={"/signup"}
             >
               Sign Up
@@ -94,7 +100,7 @@ const Login = () => {
               <button
                 type="submit"
                 onClick={handleLogin}
-                className="text-white bg-blue hover:bg-light-blue px-8 md:w-[50%] py-2 md:py-3 rounded-lg text-[20px] leading-[21.8px] font-merriweather flex items-center justify-center"
+                className="text-white bg-secondary hover:bg-light-yellow px-8 md:w-[50%] py-2 md:py-3 rounded-lg text-[20px] leading-[21.8px] font-merriweather flex items-center justify-center"
               >
                 Login
               </button>

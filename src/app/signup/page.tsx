@@ -9,7 +9,7 @@ import Navbar from "@/components/Navbar/NavBar";
 import Footer from "@/components/Footer/Footer";
 
 const Signup = () => {
-  const [fullName, setFullName] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -21,31 +21,32 @@ const Signup = () => {
 
   const handleSignup = async () => {
     setError(null);
-
+  
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       toast.error("Passwords do not match");
       return;
     }
-
+  
     try {
-      const response = await fetch("/api/signup", {
+      const response = await fetch("http://localhost:8000/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ fullName, email, phoneNumber, password }),
+        body: JSON.stringify({ name, email, phoneNumber, password }),
       });
-
+  
+      const data = await response.json(); // Parse the response
+  
       if (response.ok) {
         toast.success("Signup successful! Redirecting to login...");
         setTimeout(() => {
           router.push("/login");
         }, 2000);
       } else {
-        console.error("Signup failed");
-        setError("Signup failed. Please try again.");
-        toast.error("Signup failed. Please try again.");
+        setError(data.error || "Signup failed. Please try again.");
+        toast.error(data.error || "Signup failed. Please try again.");
       }
     } catch (error) {
       console.error("An error occurred:", error);
@@ -53,6 +54,7 @@ const Signup = () => {
       toast.error("An error occurred. Please try again.");
     }
   };
+  
 
   return (
     <>
@@ -68,7 +70,7 @@ const Signup = () => {
             <div>
               <p className="text-black font-extrabold text-[20px] md:text-[15px] leading-[15px] font-merriweather">Already have an account?</p>
             <Link
-              className="text-black font-semibold text-[12px] md:text-[12px] underline leading-[15px] font-merriweather"
+              className="text-secondary font-semibold text-[12px] md:text-[12px] underline leading-[15px] font-merriweather"
               href={"/login"}
             >
               Login
@@ -82,8 +84,8 @@ const Signup = () => {
               <input
                 type="text"
                 className="border rounded-md p-2 w-full"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className="mb-4">
@@ -147,7 +149,7 @@ const Signup = () => {
               <button
                 type="submit"
                 onClick={handleSignup}
-                className="text-white bg-blue hover:bg-light-blue px-8 md:w-[50%] py-2 md:py-3 rounded-lg text-[20px] leading-[21.8px] font-merriweather flex items-center justify-center"
+                className="text-white bg-secondary hover:bg-light-yellow px-8 md:w-[50%] py-2 md:py-3 rounded-lg text-[20px] leading-[21.8px] font-merriweather flex items-center justify-center"
               >
                 Sign Up
               </button>

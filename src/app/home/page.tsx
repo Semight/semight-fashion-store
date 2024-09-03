@@ -53,7 +53,7 @@ const Home = () => {
           </div>
         </section>
 
-        <div className="px-24">
+        <div className="px-4 md:px-24">
           {/* Featured Products */}
           <div>
             <h2 className="text-3xl font-bold text-black-1 mb-8 text-center">

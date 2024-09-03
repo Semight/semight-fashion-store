@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { GiHamburgerMenu } from 'react-icons/gi';
-import { AiOutlineClose, AiFillMessage } from 'react-icons/ai';
+import { AiOutlineClose } from 'react-icons/ai';
 import { IoLogOut } from 'react-icons/io5';
 import Logo from '../Logo/Logo';
 
@@ -14,15 +14,42 @@ const Navbar: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const localConfig = window.localStorage.getItem('userDetails');
-    setLoggedIn(localConfig !== null);
-
-    if (localConfig !== null) {
-      const data = JSON.parse(localConfig);
-      setUsername(data.full_name); // Use full_name directly
-    }
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem('authToken');
+      console.log("Token:", token);
+      if (token) {
+        try {
+          const response = await fetch('http://localhost:8000/api/users/profile', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+  
+          console.log("Response status:", response.status);
+          if (response.ok) {
+            const user = await response.json();
+            console.log("User data:", user);
+            setUsername(user.name); // Use user.name instead of user.fullName
+            setLoggedIn(true);
+          } else {
+            console.error("Failed to fetch user profile:", response.statusText);
+            setLoggedIn(false);
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+          setLoggedIn(false);
+        }
+      } else {
+        console.log("No token found");
+        setLoggedIn(false);
+      }
+    };
+  
+    fetchUserProfile();
   }, []);
 
+  
   const handleOutsideClick = (event: MouseEvent) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
       setIsOpen(false);
@@ -38,9 +65,14 @@ const Navbar: React.FC = () => {
   }, []);
 
   const logout = () => {
-    window.localStorage.removeItem('userDetails');
+    localStorage.removeItem('authToken');
+    setLoggedIn(false);
     window.location.assign('/');
   };
+
+  useEffect(() => {
+    console.log("Username:", username);
+  }, [username]);
 
   return (
     <>
@@ -53,24 +85,25 @@ const Navbar: React.FC = () => {
           </div>
           <div className="hidden md:flex flex-1 justify-center space-x-4">
             {/* Navigation Links */}
-            <Link href="/" className="text-black hover:text-light-black-4 transform no-underline transition-transform duration-200 hover:scale-90 text-lg font-semibold font-merriweather">Home</Link>
-            <Link href="/shop" className="text-black hover:text-light-black-4 transform no-underline transition-transform duration-200 hover:scale-90 text-lg font-semibold font-merriweather">Shop</Link>
-            <Link href="/cart" className="text-black hover:text-light-black-4 transform no-underline transition-transform duration-200 hover:scale-90 text-lg font-semibold font-merriweather">Cart</Link>
-            <Link href="/about" className="text-black hover:text-light-black-4 transform no-underline transition-transform duration-200 hover:scale-90 text-lg font-semibold font-merriweather">About</Link>
+            <Link href="/" className="text-black hover:text-light-black-4 transform no-underline transition-transform duration-75 hover:scale-90 text-lg font-medium">Home</Link>
+            <Link href="/shop" className="text-black hover:text-light-black-4 transform no-underline transition-transform duration-75 hover:scale-90 text-lg font-medium">Shop</Link>
+            <Link href="/cart" className="text-black hover:text-light-black-4 transform no-underline transition-transform duration-75 hover:scale-90 text-lg font-medium">Cart</Link>
+            <Link href="/about" className="text-black hover:text-light-black-4 transform no-underline transition-transform duration-75 hover:scale-90 text-lg font-medium">About</Link>
           </div>
           <div className="hidden md:block">
             {!loggedIn ? (
-              <Link href="/login" className="py-2 px-4 rounded-md text-white bg-secondary no-underline text-lg font-semibold font-merriweather">Login</Link>
+              <Link href="/login" className="py-2 px-6 rounded-md text-white bg-secondary no-underline text-lg font-medium">Login</Link>
             ) : (
               <div className="flex items-center space-x-4">
                 <div
                   ref={dropdownRef}
                   onClick={() => setIsOpen(!isOpen)}
-                  className="cursor-pointer text-black font-semibold flex items-center gap-2 relative"
+                  className="cursor-pointer text-black font-medium flex items-center gap-2 relative"
                 >
-                  <p>{username}</p>
+                  Welcome,
+                  <p className='text-secondary font-semibold text-lg'>{username}</p>
                   {isOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-white border border-secondary rounded shadow-lg">
+                    <div className="absolute right-0 mt-[8.5rem] w-28 bg-white border border-secondary rounded shadow-lg">
                       <Link href="/profile" className="block px-4 py-2 hover:bg-light-yellow">Profile</Link>
                       <Link href="/settings" className="block px-4 py-2 hover:bg-light-yellow">Settings</Link>
                       <button onClick={logout} className="block w-full bg-secondary text-left px-4 py-2 hover:bg-light-yellow">Logout</button>
