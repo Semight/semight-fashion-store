@@ -10,19 +10,26 @@ interface UserProfile {
   password: string;
 }
 
-const fetchUserProfile = async (userId: string): Promise<UserProfile> => {
-  const response = await fetch(`/api/users/${userId}`);
+const fetchUserProfile = async (): Promise<UserProfile> => {
+  const token = localStorage.getItem('authToken');
+  const response = await fetch('http://localhost:8000/api/users/profile', {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+    },
+  });
   if (!response.ok) {
     throw new Error('Failed to fetch user profile');
   }
   return await response.json();
 };
 
-const updateUserProfile = async (userId: string, userProfile: UserProfile): Promise<UserProfile> => {
-  const response = await fetch(`/api/users/${userId}`, {
-    method: "PUT",
+const updateUserProfile = async (userProfile: UserProfile): Promise<UserProfile> => {
+  const token = localStorage.getItem('authToken');
+  const response = await fetch('http://localhost:8000/api/users/profile', {
+    method: 'PUT',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify(userProfile),
   });
@@ -39,13 +46,10 @@ const Profile: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Assuming user ID is available somehow
-  const userId = "some-user-id";
-
   useEffect(() => {
     const loadProfile = async () => {
       try {
-        const userProfile = await fetchUserProfile(userId);
+        const userProfile = await fetchUserProfile();
         setProfile(userProfile);
         setUpdatedProfile(userProfile);
       } catch (error) {
@@ -56,7 +60,7 @@ const Profile: React.FC = () => {
     };
 
     loadProfile();
-  }, [userId]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -71,7 +75,7 @@ const Profile: React.FC = () => {
   const handleSave = async () => {
     if (updatedProfile) {
       try {
-        const updated = await updateUserProfile(userId, updatedProfile);
+        const updated = await updateUserProfile(updatedProfile);
         setProfile(updated);
         setIsEditing(false);
       } catch (error) {
@@ -86,62 +90,54 @@ const Profile: React.FC = () => {
 
       <div className="h-[5rem]"></div>
 
-      <div className="shadow-custom border p-5 flex items-center m-[10rem]">
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Profile</h2>
-        {isLoading && <p>Loading profile...</p>}
-        {error && <p className="text-danger">{error}</p>}
-        {profile && !isLoading && !error && (
-          <Form>
-            <Form.Group controlId="formProfileName">
-              <Form.Label>Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={isEditing ? updatedProfile?.name || "" : profile.name}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </Form.Group>
-            <Form.Group controlId="formProfileEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={isEditing ? updatedProfile?.email || "" : profile.email}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </Form.Group>
-            <Form.Group controlId="formProfilePassword">
-              <Form.Label>Password</Form.Label>
-              <Form.Control
-                type="password"
-                name="password"
-                value={isEditing ? updatedProfile?.password || "" : "••••••••"}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </Form.Group>
-            <Form.Group className="mt-3">
-              {isEditing ? (
-                <>
-                  <Button variant="secondary" onClick={() => setIsEditing(false)}>
-                    Cancel
+      <div className="shadow-custom border-none rounded-xl p-5 flex items-center m-[10rem]">
+        <div>
+          <h2 className="text-2xl font-bold mb-4">Profile</h2>
+          {isLoading && <p>Loading profile...</p>}
+          {error && <p className="text-danger">{error}</p>}
+          {profile && !isLoading && !error && (
+            <Form>
+              <Form.Group controlId="formProfileName" className="flex items-center gap-1 mb-2">
+                <Form.Label>Name:</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="name"
+                  value={isEditing ? updatedProfile?.name || "" : profile.name}
+                  onChange={handleChange}
+                  readOnly={!isEditing}
+                  className="text-lg text-secondary font-semibold pl-2"
+                />
+              </Form.Group>
+              <Form.Group controlId="formProfileEmail" className="flex items-center gap-1 mb-2">
+                <Form.Label>Email:</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={isEditing ? updatedProfile?.email || "" : profile.email}
+                  onChange={handleChange}
+                  readOnly={!isEditing}
+                  className="text-lg text-secondary font-semibold pl-2"
+                />
+              </Form.Group>
+              <Form.Group className="mt-3">
+                {isEditing ? (
+                  <>
+                    <Button variant="secondary" onClick={() => setIsEditing(false)} className="px-4 p-2 rounded-lg text-white bg-danger">
+                      Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleSave} className="px-4 p-2 rounded-lg text-white bg-secondary ml-2">
+                      Save
+                    </Button>
+                  </>
+                ) : (
+                  <Button variant="primary" onClick={() => setIsEditing(true)} className="px-4 p-2 rounded-lg text-white bg-secondary">
+                    Edit
                   </Button>
-                  <Button variant="primary" onClick={handleSave} className="ml-2">
-                    Save
-                  </Button>
-                </>
-              ) : (
-                <Button variant="primary" onClick={() => setIsEditing(true)}>
-                  Edit
-                </Button>
-              )}
-            </Form.Group>
-          </Form>
-        )}
-      </div>
+                )}
+              </Form.Group>
+            </Form>
+          )}
+        </div>
       </div>
     </>
   );

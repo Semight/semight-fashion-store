@@ -105,7 +105,6 @@ const Navbar: React.FC = () => {
                   {isOpen && (
                     <div className="absolute right-0 mt-[8.5rem] w-28 bg-white border border-secondary rounded shadow-lg">
                       <Link href="/profile" className="block px-4 py-2 hover:bg-light-yellow">Profile</Link>
-                      <Link href="/settings" className="block px-4 py-2 hover:bg-light-yellow">Settings</Link>
                       <button onClick={logout} className="block w-full bg-secondary text-left px-4 py-2 hover:bg-light-yellow">Logout</button>
                     </div>
                   )}
