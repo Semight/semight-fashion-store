@@ -91,7 +91,7 @@ const Profile: React.FC = () => {
       <div className="h-[5rem]"></div>
 
       <div className="shadow-custom border-none rounded-xl p-5 flex items-center m-[10rem]">
-        <div>
+        <div className="">
           <h2 className="text-2xl font-bold mb-4">Profile</h2>
           {isLoading && <p>Loading profile...</p>}
           {error && <p className="text-danger">{error}</p>}
