@@ -1,29 +1,63 @@
-"use client"
+"use client";
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/NavBar";
-import React, { useState } from "react";
-import Product1 from "@/assets/men_wear1.jpeg"
-import Product2 from "@/assets/women_bag.jpeg"
-import Product3 from "@/assets/kid.jpg"
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const allProducts = [
-  { id: '1', name: 'Product 1', price: '$49.99', image: Product1, category: 'men' },
-  { id: '2', name: 'Product 2', price: '$59.99', image: Product2, category: 'women' },
-  { id: '3', name: 'Product 3', price: '$39.99', image: Product3, category: 'kids' },
-  // Add more products as needed
-];
+interface Product {
+  id: string;
+  _id: string;
+  name: string;
+  price: string;
+  images: string;
+  category: string;
+}
 
 const Shop = () => {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [products, setProducts] = useState<Product[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const filteredProducts = allProducts.filter(product => {
-    const matchesCategory = selectedCategory ? product.category === selectedCategory : true;
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/products");
+        if (!response.ok) {
+          throw new Error("Failed to fetch products");
+        }
+        const data: Product[] = await response.json();
+        // Map _id to id for use in the component
+        setProducts(data.map((product) => ({ ...product, id: product._id })));
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory = selectedCategory
+      ? product.category.toLowerCase() === selectedCategory.toLowerCase()
+      : true;
+    const matchesSearch = product.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
-  });
+  })
+
+  const handleCategorySelect = (category: string | null) => {
+    console.log("Selected Category:", category);
+    setSelectedCategory(category);
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div className="text-red-500">{error}</div>;
 
   return (
     <>
@@ -36,32 +70,46 @@ const Shop = () => {
           <ul>
             <li>
               <button
-                className={`block p-2 w-full text-left ${selectedCategory === null ? 'bg-black text-white' : 'bg-white'}`}
-                onClick={() => setSelectedCategory(null)}
+                className={`block p-2 w-full text-left ${
+                  selectedCategory === null ? "bg-black text-white" : "bg-white"
+                }`}
+                onClick={() => handleCategorySelect(null)}
               >
                 All
               </button>
             </li>
             <li>
               <button
-                className={`block p-2 w-full text-left ${selectedCategory === 'men' ? 'bg-black text-white' : 'bg-white'}`}
-                onClick={() => setSelectedCategory('men')}
+                className={`block p-2 w-full text-left ${
+                  selectedCategory === "men"
+                    ? "bg-black text-white"
+                    : "bg-white"
+                }`}
+                onClick={() => handleCategorySelect("men")}
               >
                 Men
               </button>
             </li>
             <li>
               <button
-                className={`block p-2 w-full text-left ${selectedCategory === 'women' ? 'bg-black text-white' : 'bg-white'}`}
-                onClick={() => setSelectedCategory('women')}
+                className={`block p-2 w-full text-left ${
+                  selectedCategory === "women"
+                    ? "bg-black text-white"
+                    : "bg-white"
+                }`}
+                onClick={() => handleCategorySelect("women")}
               >
                 Women
               </button>
             </li>
             <li>
               <button
-                className={`block p-2 w-full text-left ${selectedCategory === 'kids' ? 'bg-black text-white' : 'bg-white'}`}
-                onClick={() => setSelectedCategory('kids')}
+                className={`block p-2 w-full text-left ${
+                  selectedCategory === "kids"
+                    ? "bg-black text-white"
+                    : "bg-white"
+                }`}
+                onClick={() => handleCategorySelect("kid")}
               >
                 Kids
               </button>
@@ -82,21 +130,28 @@ const Shop = () => {
           </div>
 
           <section>
-            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Products</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+              Products
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
-                  <div key={product.id} className="bg-white p-6 rounded-lg shadow-custom">
+                  <div
+                    key={product.id}
+                    className="bg-white p-6 rounded-lg shadow-custom"
+                  >
                     <Link href={`/products/${product.id}`}>
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      width={400}
-                      height={400}
-                      className="w-full h-48 object-cover mb-4"
-                    />
-                    <h3 className="text-xl font-semibold text-gray-800">{product.name}</h3>
-                    <p className="text-gray-600">{product.price}</p>
+                      <Image
+                        src={product.images.length > 0 ? product.images[0] : '/default-image.png'} 
+                        alt={product.name}
+                        width={400}
+                        height={400}
+                        className="w-full h-48 object-cover mb-4"
+                      />
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        {product.name}
+                      </h3>
+                      <p className="text-gray-600">#{product.price}</p>
                     </Link>
                   </div>
                 ))

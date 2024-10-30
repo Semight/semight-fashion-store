@@ -12,14 +12,21 @@ interface Product {
   category: string;
 }
 
-const fetchProducts = async () => {
-  const response = await fetch("/api/products");
+const fetchProducts = async (category?: string) => {
+  const url = category
+    ? `http://localhost:8000/api/products/category/${category}`
+    : "http://localhost:8000/api/products";
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error("Failed to fetch products");
+  }
   const data = await response.json();
   return data;
 };
 
 const addProduct = async (product: Product) => {
-  const response = await fetch("/api/products", {
+  console.log("Product data to send:", product);
+  const response = await fetch("http://localhost:8000/api/products", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -30,6 +37,7 @@ const addProduct = async (product: Product) => {
 };
 
 const ProductsSection: React.FC = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [newProduct, setNewProduct] = useState<Product>({
@@ -52,27 +60,46 @@ const ProductsSection: React.FC = () => {
   }, []);
 
   const handleAddProduct = async () => {
-    const addedProduct = await addProduct(newProduct);
-    setProducts([...products, addedProduct]);
-    setShowModal(false);
-    setNewProduct({
-      id: "",
-      name: "",
-      price: "",
-      description: "",
-      images: [],
-      sizes: [],
-      category: "",
-    });
+    if (!newProduct.category) {
+      alert("Please select a category for the product.");
+      return;
+    }
+    try {
+      const addedProduct = await addProduct(newProduct);
+      setProducts([...products, addedProduct]);
+      setShowModal(false);
+      setNewProduct({
+        id: "",
+        name: "",
+        price: "",
+        description: "",
+        images: [],
+        sizes: [],
+        category: "",
+      });
+    } catch (error) {
+      console.error("Failed to add product:", error);
+      alert("Error adding product. Please try again."); // Display an error message to the user
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    const newImages = files.map((file) => URL.createObjectURL(file));
-    setNewProduct((prevProduct) => ({
-      ...prevProduct,
-      images: [...prevProduct.images, ...newImages],
-    }));
+    Promise.all(
+      files.map((file) => {
+        return new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      })
+    ).then((base64Images) => {
+      setNewProduct((prevProduct) => ({
+        ...prevProduct,
+        images: [...prevProduct.images, ...base64Images],
+      }));
+    });
   };
 
   const handleRemoveImage = (index: number) => {
@@ -98,6 +125,21 @@ const ProductsSection: React.FC = () => {
       category: e.target.value,
     }));
   };
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const fetchedProducts = await fetchProducts(
+          selectedCategory || undefined
+        );
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    loadProducts();
+  }, [selectedCategory]);
 
   return (
     <div className="p-4">
@@ -126,11 +168,15 @@ const ProductsSection: React.FC = () => {
               <td className="p-2 border-b">{product.id}</td>
               <td className="p-2 border-b">{product.name}</td>
               <td className="p-2 border-b">{product.price}</td>
-              <td className="p-2 border-b">{product.sizes.join(", ")}</td>
+              <td className="p-2 border-b">
+                {product.sizes?.join(", ") || "N/A"}
+              </td>
               <td className="p-2 border-b">{product.category}</td>
               <td className="p-2 border-b">
                 <button className="text-secondary hover:underline">Edit</button>
-                <button className="text-danger hover:underline ml-4">Delete</button>
+                <button className="text-danger hover:underline ml-4">
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
@@ -142,7 +188,10 @@ const ProductsSection: React.FC = () => {
           <div className="bg-white rounded-lg overflow-hidden w-1/2">
             <div className="flex justify-between items-center p-4 border-b">
               <h3 className="text-lg font-semibold">Add New Product</h3>
-              <button onClick={() => setShowModal(false)} className="text-light-black-4 hover:text-light-black-3">
+              <button
+                onClick={() => setShowModal(false)}
+                className="text-light-black-4 hover:text-light-black-3"
+              >
                 &times;
               </button>
             </div>
@@ -193,7 +242,12 @@ const ProductsSection: React.FC = () => {
               </div>
               <div className="mb-4">
                 <label className="block text-black">Images</label>
-                <input type="file" multiple onChange={handleImageChange} className="mt-1" />
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleImageChange}
+                  className="mt-1"
+                />
                 <div className="mt-3 flex space-x-2">
                   {newProduct.images.map((image, index) => (
                     <div key={index} className="relative">
@@ -230,7 +284,7 @@ const ProductsSection: React.FC = () => {
               <div className="mb-4">
                 <label className="block text-black">Category</label>
                 <select
-                  value={newProduct.category}
+                  value={newProduct.category || ""}
                   onChange={handleCategoryChange}
                   className="mt-1 p-2 border rounded w-full"
                 >

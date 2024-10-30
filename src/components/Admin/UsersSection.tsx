@@ -2,36 +2,99 @@
 import React, { useEffect, useState } from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
 
-const fetchUsers = async () => {
-    const response = await fetch('/api/users');
-    const data = await response.json();
-    return data;
+interface User {
+    _id: string; // Change id to _id to match the database structure
+    name: string;
+    email: string;
+    role: string;
+}
+
+const fetchUsers = async (): Promise<User[]> => {
+    const token = localStorage.getItem('authToken');
+
+    if (!token) {
+        throw new Error('No auth token found');
+    }
+
+    const response = await fetch('http://localhost:8000/api/users/users', {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+    if (!response.ok) {
+        throw new Error('Failed to fetch users');
+    }
+    return response.json();
 };
 
-const deleteUser = async (userId: string) => {
-    await fetch(`/api/users/${userId}`, {
+const deleteUser = async (userId: string): Promise<void> => {
+    if (!userId || userId.length !== 24) {
+        console.error("Invalid userId:", userId);
+        throw new Error("Invalid user ID");
+    }
+
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+        throw new Error('No auth token found');
+    }
+
+    const response = await fetch(`http://localhost:8000/api/users/users/byId/${userId}`, {
         method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
     });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Error deleting user:", errorData);
+        throw new Error('Failed to delete user');
+    }
 };
 
 const UsersSection: React.FC = () => {
-    const [users, setUsers] = useState<any[]>([]); // Replace `any` with the appropriate type for users
+    const [users, setUsers] = useState<User[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
 
     useEffect(() => {
         const loadUsers = async () => {
-            const fetchedUsers = await fetchUsers();
-            setUsers(fetchedUsers);
+            try {
+                const fetchedUsers = await fetchUsers();
+                setUsers(fetchedUsers);
+            } catch (err) {
+                setError((err as Error).message);
+            } finally {
+                setLoading(false);
+            }
         };
 
         loadUsers();
     }, []);
 
     const handleDelete = async (userId: string) => {
-        await deleteUser(userId);
-        // Refresh the user list after deletion
-        const updatedUsers = users.filter(user => user.id !== userId);
-        setUsers(updatedUsers);
+        if (window.confirm('Are you sure you want to delete this user?')) {
+            setDeletingUserId(userId); // Show loading for the specific delete operation
+            try {
+                // Optimistically update the state
+                setUsers(prevUsers => prevUsers.filter(user => user._id !== userId));
+                await deleteUser(userId);
+            } catch (err) {
+                // Revert optimistic update by re-fetching users
+                setError('Failed to delete user. Please try again.');
+                const fetchedUsers = await fetchUsers();
+                setUsers(fetchedUsers);
+            } finally {
+                setDeletingUserId(null); // Reset loading state
+            }
+        }
     };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div className="text-red-500">{error}</div>;
 
     return (
         <div>
@@ -48,16 +111,16 @@ const UsersSection: React.FC = () => {
                 </thead>
                 <tbody>
                     {users.map(user => (
-                        <tr key={user.id}>
-                            <td className="p-2 border-b">{user.id}</td>
+                        <tr key={user._id}>
+                            <td className="p-2 border-b">{user._id}</td> {/* Use _id instead of id */}
                             <td className="p-2 border-b">{user.name}</td>
                             <td className="p-2 border-b">{user.email}</td>
                             <td className="p-2 border-b">{user.role}</td>
                             <td className="p-2 border-b">
-                                {/* Removed Edit button */}
                                 <button
-                                    className="text-danger ml-4 flex items-center"
-                                    onClick={() => handleDelete(user.id)}
+                                    className={`text-danger ml-4 flex items-center ${deletingUserId === user._id ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    onClick={() => handleDelete(user._id)} // Use _id here as well
+                                    disabled={deletingUserId === user._id} // Disable button while deleting
                                 >
                                     <AiOutlineDelete className="mr-2" /> Delete
                                 </button>

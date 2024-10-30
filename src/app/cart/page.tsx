@@ -21,9 +21,12 @@ const Cart = () => {
   const router = useRouter();
   const isLoggedIn = useAuth();
 
-  const totalAmount = cart.reduce((total, item) => 
-    total + parseFloat(item.product.price.replace('$', '')) * item.quantity, 0
-  );
+  const totalAmount = cart.reduce((total, item) => {
+    const price = typeof item.product.price === 'string'
+      ? parseFloat(item.product.price.replace('#', ''))
+      : item.product.price;
+    return total + price * item.quantity;
+  }, 0);
 
   const handleCheckout = () => {
     if (isLoggedIn) {
@@ -56,7 +59,7 @@ const Cart = () => {
                 <img src={item.product.images[0]} alt={item.product.name} className="w-24 h-24 object-cover mr-4" />
                 <div>
                   <h2 className="text-lg font-semibold">{item.product.name}</h2>
-                  <p className="text-light-black-7">{item.product.price}</p>
+                  <p className="text-light-black-7">#{item.product.price}</p>
                   <p className="text-light-black-7">Quantity: {item.quantity}</p>
                   {item.size && <p className="text-secondary">Size: {item.size}</p>}
                 </div>
@@ -75,7 +78,7 @@ const Cart = () => {
       {/* Checkout Section */}
       <div className="ml-8 flex-shrink-0 w-64">
         <h2 className="text-2xl font-semibold mb-4">Total Amount</h2>
-        <p className="text-lg mb-4">${totalAmount.toFixed(2)}</p>
+        <p className="text-lg mb-4">#{totalAmount.toFixed(2)}</p>
         <button
           className="py-1 px-2 mb-4 rounded-md text-white bg-danger"
           onClick={clearCart}

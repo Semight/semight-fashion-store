@@ -12,6 +12,7 @@
     "@heroicons/react": "^2.1.5",
     "@mantine/core": "^7.12.1",
     "@mantine/hooks": "^7.12.1",
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "next": "14.2.5",
     "react": "^18",

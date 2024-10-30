@@ -1,5 +1,49 @@
-import ProductDetail from './ProductDetail';
-import { allProducts } from '@/data/products';
+// import ProductDetail from './ProductDetail';
+// import { allProducts } from '@/data/products';
+
+// interface Product {
+//   id: string;
+//   name: string;
+//   price: string;
+//   description: string;
+//   images: string[];
+//   sizes: string[];
+// }
+
+// interface PageProps {
+//   params: { id: string };
+// }
+
+// export async function generateMetadata({ params }: PageProps) {
+//   const product = allProducts.find((p) => p.id === params.id) || null;
+  
+//   return {
+//     title: product ? product.name : 'Product Not Found',
+//     description: product ? product.description : 'No product details available',
+//   };
+// }
+
+// export async function generateStaticParams() {
+//   return allProducts.map((product) => ({
+//     id: product.id,
+//   }));
+// }
+
+// export default async function Page({ params }: PageProps) {
+//   const product = allProducts.find((p) => p.id === params.id) || null;
+
+//   return (
+//     <ProductDetail />
+//   );
+// }
+
+"use client";
+import { useState, useEffect } from 'react';
+import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
+import { MdClose } from 'react-icons/md';
+import Link from 'next/link';
+import { useCart } from '@/Context/CartContext';
+import { useParams } from 'next/navigation';
 
 interface Product {
   id: string;
@@ -10,25 +54,142 @@ interface Product {
   sizes: string[];
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
-  const product = allProducts.find((p) => p.id === params.id) || null;
-  
-  return {
-    title: product ? product.name : 'Product Not Found',
-    description: product ? product.description : 'No product details available',
+const ProductDetail = () => {
+  const { id } = useParams(); // Get the `id` parameter from the URL
+  // console.log(id);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const [size, setSize] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { addToCart } = useCart();
+
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`http://localhost:8000/api/products/${id}`);
+        if (!response.ok) throw new Error("Failed to fetch product details");
+        const data = await response.json();
+        setProduct(data);
+        setSelectedImage(data.images[0]); // Set the first image as default
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  const handleQuantityChange = (delta: number) => {
+    setQuantity(prev => Math.max(1, prev + delta));
   };
-}
 
-export async function generateStaticParams() {
-  return allProducts.map((product) => ({
-    id: product.id,
-  }));
-}
+  const handleAddToCart = () => {
+    if (product) {
+      addToCart({ product, quantity, size });
+      setShowModal(true);
+    }
+  };
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const product = allProducts.find((p) => p.id === params.id) || null;
-  
+  if (loading) return <p>Loading product details...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+  if (!product) return <p>Product not found</p>;
+
   return (
-    <ProductDetail product={product} />
+    <div className="container mx-auto px-4 py-8">
+      <Link href="/shop" className="text-secondary hover:underline">Back to Shop</Link>
+      <div className="flex flex-col md:flex-row mt-4">
+        <div className="w-full md:w-1/2">
+          <img src={selectedImage || ''} alt={product.name} className="w-full h-auto object-cover" />
+          <div className="flex mt-4 space-x-2">
+            {product.images.map((img, index) => (
+              <img
+                key={index}
+                src={img}
+                alt={`Thumbnail ${index}`}
+                className="w-24 h-24 object-cover cursor-pointer border-2 border-light-black-4 hover:border-blue"
+                onClick={() => setSelectedImage(img)}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="md:ml-8 mt-4 md:mt-0">
+          <h1 className="text-3xl font-bold">{product.name}</h1>
+          <p className="text-lg text-light-black-7 mt-2">#{product.price}</p>
+          <p className="text-light-black-7 mt-4">{product.description}</p>
+
+          <div className="mt-4">
+            <h2 className="text-lg font-semibold">Select Size</h2>
+            <div className="flex space-x-2 mt-2">
+              {product.sizes.map((sizeOption) => (
+                <button
+                  key={sizeOption}
+                  className={`px-4 py-2 border border-secondary text-secondary rounded-md ${size === sizeOption ? 'bg-secondary text-white' : 'bg-white'}`}
+                  onClick={() => setSize(sizeOption)}
+                >
+                  {sizeOption}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-4 flex items-center">
+            <button
+              className="p-2 border border-secondary rounded-md text-secondary"
+              onClick={() => handleQuantityChange(-1)}
+            >
+              <AiOutlineMinus />
+            </button>
+            <span className="mx-2 text-lg text-secondary">{quantity}</span>
+            <button
+              className="p-2 border border-secondary rounded-md text-secondary"
+              onClick={() => handleQuantityChange(1)}
+            >
+              <AiOutlinePlus />
+            </button>
+          </div>
+
+          <button
+            className="mt-4 py-2 px-4 rounded-md text-white bg-secondary hover:bg-light-yellow-2"
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
+
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-light-black-4 bg-opacity-50 z-50">
+          <div className="bg-white p-8 rounded-lg relative w-1/2">
+            <button
+              className="absolute top-2 right-2 text-light-black-7"
+              onClick={() => setShowModal(false)}
+            >
+              <MdClose size={24} />
+            </button>
+            <h2 className="text-2xl font-semibold mb-4">Product Added to Cart</h2>
+            <p className="mb-4">You have added {quantity} {product.name}(s) to your cart.</p>
+            <div className="flex justify-between mt-4">
+              <Link href="/shop">
+                <button className="py-2 px-4 rounded-md text-white bg-black hover:bg-secondary">Continue Shopping</button>
+              </Link>
+              <Link href="/cart">
+                <button className="py-2 px-4 rounded-md text-white bg-secondary hover:bg-black">View Cart and Checkout</button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
-}
+};
+
+export default ProductDetail;
+

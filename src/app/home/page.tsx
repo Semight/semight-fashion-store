@@ -15,9 +15,10 @@ import Product3 from "@/assets/women_bags.jpeg";
 
 const Home = () => {
   const products = [
-    { id: "1", name: "Product 1", price: "6900.00", image: Product1 },
-    { id: "2", name: "Product 2", price: "9123.99", image: Product2 },
-    { id: "3", name: "Product 3", price: "9567.99", image: Product3 },
+    // { id: "1", name: "Product 1", price: "6900.00", image: Product1 },
+    // { id: "2", name: "Product 2", price: "9123.99", image: Product2 },
+    // { id: "3", name: "Product 3", price: "9567.99", image: Product3 },
+    { name: "Product 3", price: "9567.99", image: Product3 },
   ];
 
   return (
@@ -59,7 +60,7 @@ const Home = () => {
             <h2 className="text-3xl font-bold text-black-1 mb-8 text-center">
               Our Product
             </h2>
-            <Products products={products} />
+            <Products />
           </div>
 
           {/* Categories */}
@@ -78,7 +79,7 @@ const Home = () => {
                     className="w-full h-48 object-cover mb-4"
                   />
                   <h3 className="text-xl font-semibold text-black-1">Men</h3>
-                  <Link href="/shop/men" className="text-secondary hover:underline">
+                  <Link href="/shop" className="text-secondary hover:underline">
                     Shop Men
                   </Link>
                 </div>
@@ -92,7 +93,7 @@ const Home = () => {
                   />
                   <h3 className="text-xl font-semibold text-black-1">Women</h3>
                   <Link
-                    href="/shop/women"
+                    href="/shop"
                     className="text-secondary hover:underline"
                   >
                     Shop Women
@@ -107,7 +108,7 @@ const Home = () => {
                     className="w-full h-48 object-cover mb-4"
                   />
                   <h3 className="text-xl font-semibold text-black-1">Kids</h3>
-                  <Link href="/shop/kids" className="text-secondary hover:underline">
+                  <Link href="/shop" className="text-secondary hover:underline">
                     Shop Kids
                   </Link>
                 </div>

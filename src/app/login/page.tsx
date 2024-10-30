@@ -26,26 +26,32 @@ const Login = () => {
 
       const data = await response.json();
 
-      if (response.ok) {
-        localStorage.setItem('authToken', data.token);
+      console.log("Login response:", data); // Check user data
 
-        // Redirect based on user role
-        if (data.user.role === "admin") {
+      if (response.ok) {
+        localStorage.setItem("authToken", data.token);
+
+        // Use a strict role check and ensure it's lowercase comparison for safety
+        const userRole = data.user?.role?.toLowerCase() || ""; // Handle case insensitivity
+
+        if (userRole === "admin") {
           toast.success("Login successful! Redirecting to admin dashboard...");
           setTimeout(() => {
             router.push("/admin");
           }, 2000);
-        } else {
+        } else if (userRole === "user") {
           toast.success("Login successful! Redirecting to cart...");
           setTimeout(() => {
             router.push("/cart");
           }, 2000);
         }
       } else {
-        toast.error(data.error || "Login failed");
+        toast.error(
+          data.error || "Login failed. Please check your credentials."
+        );
       }
     } catch (error) {
-      toast.error("An error occurred!");
+      toast.error("Network error. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -95,6 +101,9 @@ const Login = () => {
                   />
                   <button
                     type="button"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
                   >
@@ -118,7 +127,7 @@ const Login = () => {
                   disabled={isLoading}
                   className="text-white bg-secondary hover:bg-light-yellow px-8 md:w-[50%] py-2 md:py-3 rounded-lg text-[20px] leading-[21.8px] font-merriweather flex items-center justify-center"
                 >
-                  {isLoading ? "Logging in..." : "Login"}
+                  {isLoading ? <div className="spinner"></div> : "Login"}
                 </button>
               </div>
             </div>
