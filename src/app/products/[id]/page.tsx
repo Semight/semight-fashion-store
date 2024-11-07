@@ -1,42 +1,3 @@
-// import ProductDetail from './ProductDetail';
-// import { allProducts } from '@/data/products';
-
-// interface Product {
-//   id: string;
-//   name: string;
-//   price: string;
-//   description: string;
-//   images: string[];
-//   sizes: string[];
-// }
-
-// interface PageProps {
-//   params: { id: string };
-// }
-
-// export async function generateMetadata({ params }: PageProps) {
-//   const product = allProducts.find((p) => p.id === params.id) || null;
-  
-//   return {
-//     title: product ? product.name : 'Product Not Found',
-//     description: product ? product.description : 'No product details available',
-//   };
-// }
-
-// export async function generateStaticParams() {
-//   return allProducts.map((product) => ({
-//     id: product.id,
-//   }));
-// }
-
-// export default async function Page({ params }: PageProps) {
-//   const product = allProducts.find((p) => p.id === params.id) || null;
-
-//   return (
-//     <ProductDetail />
-//   );
-// }
-
 "use client";
 import { useState, useEffect } from 'react';
 import { AiOutlineMinus, AiOutlinePlus } from 'react-icons/ai';
@@ -46,7 +7,7 @@ import { useCart } from '@/Context/CartContext';
 import { useParams } from 'next/navigation';
 
 interface Product {
-  id: string;
+  _id: string;
   name: string;
   price: string;
   description: string;
@@ -107,8 +68,8 @@ const ProductDetail = () => {
       <Link href="/shop" className="text-secondary hover:underline">Back to Shop</Link>
       <div className="flex flex-col md:flex-row mt-4">
         <div className="w-full md:w-1/2">
-          <img src={selectedImage || ''} alt={product.name} className="w-full h-auto object-cover" />
-          <div className="flex mt-4 space-x-2">
+          <img src={selectedImage || ''} alt={product.name} className="w-full h-[400px] object-contain" />
+          <div className="flex mt-4 space-x-2 justify-self-center">
             {product.images.map((img, index) => (
               <img
                 key={index}
@@ -122,8 +83,8 @@ const ProductDetail = () => {
         </div>
         <div className="md:ml-8 mt-4 md:mt-0">
           <h1 className="text-3xl font-bold">{product.name}</h1>
-          <p className="text-lg text-light-black-7 mt-2">#{product.price}</p>
-          <p className="text-light-black-7 mt-4">{product.description}</p>
+          <p className="text-lg text-light-black-7 mt-2"><span className='text-xl font-bold text-secondary'>Price :  </span>#{product.price}</p>
+          <p className="text-light-black-7 mt-4"><span className='text-xl font-bold text-secondary'>Description :  </span>{product.description}</p>
 
           <div className="mt-4">
             <h2 className="text-lg font-semibold">Select Size</h2>

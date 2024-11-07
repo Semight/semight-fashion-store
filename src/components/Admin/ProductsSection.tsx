@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 
 interface Product {
-  id: string;
+  _id: string;
   name: string;
   price: string;
   description: string;
@@ -41,7 +41,7 @@ const ProductsSection: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [newProduct, setNewProduct] = useState<Product>({
-    id: "",
+    _id: "",
     name: "",
     price: "",
     description: "",
@@ -69,7 +69,8 @@ const ProductsSection: React.FC = () => {
       setProducts([...products, addedProduct]);
       setShowModal(false);
       setNewProduct({
-        id: "",
+        
+        _id: "",
         name: "",
         price: "",
         description: "",
@@ -82,6 +83,31 @@ const ProductsSection: React.FC = () => {
       alert("Error adding product. Please try again."); // Display an error message to the user
     }
   };
+
+  const deleteProduct = async (productId: string) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/products/${productId}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete product");
+      }
+      console.log("Product deleted successfully");
+      setProducts(products.filter((item) => item._id !== productId))
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      alert("Error deleting product. Please try again.");
+    }
+  };
+
+  const handleDeleteProduct = (productId: string | undefined) => {
+    console.log("Attempting to delete product with ID:", productId);
+    if (productId) {
+        deleteProduct(productId);
+    } else {
+        console.error("Product ID is undefined. Cannot proceed with deletion.");
+    }
+};
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -164,8 +190,8 @@ const ProductsSection: React.FC = () => {
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product.id}>
-              <td className="p-2 border-b">{product.id}</td>
+            <tr key={product._id}>
+              <td className="p-2 border-b">{product._id}</td>
               <td className="p-2 border-b">{product.name}</td>
               <td className="p-2 border-b">{product.price}</td>
               <td className="p-2 border-b">
@@ -174,7 +200,10 @@ const ProductsSection: React.FC = () => {
               <td className="p-2 border-b">{product.category}</td>
               <td className="p-2 border-b">
                 <button className="text-secondary hover:underline">Edit</button>
-                <button className="text-danger hover:underline ml-4">
+                <button
+                  className="text-danger hover:underline ml-4"
+                  onClick={() => handleDeleteProduct(product._id)}
+                >
                   Delete
                 </button>
               </td>

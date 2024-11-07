@@ -1,5 +1,5 @@
-"use client"
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+"use client";
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
 // Define the shape of your context data
 interface AuthContextType {
@@ -15,8 +15,23 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const login = () => setIsAuthenticated(true);
-  const logout = () => setIsAuthenticated(false);
+  useEffect(() => {
+    // Check for an existing auth state in localStorage
+    const storedAuth = localStorage.getItem('isAuthenticated');
+    if (storedAuth === 'true') {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
+  const login = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('isAuthenticated', 'true'); // Save to localStorage
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('isAuthenticated'); // Clear from localStorage
+  };
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>

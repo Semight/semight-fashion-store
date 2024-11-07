@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 
 type Product = {
-  id: string;
+  _id: string;
   name: string;
   price: string;
   images: string[];
@@ -34,14 +34,21 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
     case 'ADD_TO_CART':
       return { ...state, cart: [...state.cart, action.payload] };
+      
     case 'REMOVE_FROM_CART':
-      return { ...state, cart: state.cart.filter((item) => item.product.id !== action.payload) };
+      console.log("Attempting to remove product with ID:", action.payload);
+      const updatedCart = state.cart.filter((item) => item.product._id !== action.payload);
+      console.log("Updated cart after removal:", updatedCart);
+      return { ...state, cart: updatedCart };
+      
     case 'CLEAR_CART':
       return { ...state, cart: [] };
+      
     default:
       return state;
   }
 };
+
 
 // Define props type for CartProvider
 type CartProviderProps = {

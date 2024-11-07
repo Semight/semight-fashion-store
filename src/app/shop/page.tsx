@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import Footer from "@/components/Footer/Footer";
 import Navbar from "@/components/Navbar/NavBar";
 import React, { useState, useEffect } from "react";
@@ -20,6 +20,9 @@ const Shop = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const productsPerPage = 9;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -29,7 +32,6 @@ const Shop = () => {
           throw new Error("Failed to fetch products");
         }
         const data: Product[] = await response.json();
-        // Map _id to id for use in the component
         setProducts(data.map((product) => ({ ...product, id: product._id })));
       } catch (err) {
         setError((err as Error).message);
@@ -37,7 +39,6 @@ const Shop = () => {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
@@ -49,15 +50,33 @@ const Shop = () => {
       .toLowerCase()
       .includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
-  })
+  });
 
-  const handleCategorySelect = (category: string | null) => {
-    console.log("Selected Category:", category);
-    setSelectedCategory(category);
+  // Calculate products for the current page
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div className="text-red-500">{error}</div>;
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const handleCategorySelect = (category: string | null) => {
+    setSelectedCategory(category);
+    setCurrentPage(1); // Reset to the first page when category changes
+  };
+
+  if (loading) return <div className="flex justify-center m-[23%] ">Loading...</div>;
+  if (error) return <div className="flex justify-center m-[23%] text-red-500">{error}</div>;
 
   return (
     <>
@@ -134,15 +153,19 @@ const Shop = () => {
               Products
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map((product) => (
+              {currentProducts.length > 0 ? (
+                currentProducts.map((product) => (
                   <div
                     key={product.id}
                     className="bg-white p-6 rounded-lg shadow-custom"
                   >
                     <Link href={`/products/${product.id}`}>
                       <Image
-                        src={product.images.length > 0 ? product.images[0] : '/default-image.png'} 
+                        src={
+                          product.images.length > 0
+                            ? product.images[0]
+                            : "/default-image.png"
+                        }
                         alt={product.name}
                         width={400}
                         height={400}
@@ -158,6 +181,24 @@ const Shop = () => {
               ) : (
                 <p>No products found</p>
               )}
+            </div>
+
+            {/* Pagination Controls */}
+            <div className="flex justify-center mt-6">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className="px-4 py-2 mx-2 bg-secondary text-white rounded disabled:bg-primary"
+              >
+                ← Prev
+              </button>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 mx-2 bg-secondary text-white rounded disabled:bg-primary"
+              >
+                Next →
+              </button>
             </div>
           </section>
         </main>

@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "@/components/Navbar/NavBar";
 import Footer from "@/components/Footer/Footer";
+import { useAuth } from "@/Context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -14,6 +15,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const {login} = useAuth()   
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -37,11 +39,13 @@ const Login = () => {
         if (userRole === "admin") {
           toast.success("Login successful! Redirecting to admin dashboard...");
           setTimeout(() => {
+            login()
             router.push("/admin");
           }, 2000);
         } else if (userRole === "user") {
           toast.success("Login successful! Redirecting to cart...");
           setTimeout(() => {
+            login()
             router.push("/cart");
           }, 2000);
         }

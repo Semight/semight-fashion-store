@@ -66,7 +66,7 @@ const Cart = () => {
               </div>
               <button
                 className="p-2 text-light-black-7"
-                onClick={() => removeFromCart(item.product.id)}
+                onClick={() => removeFromCart(item.product._id)}
               >
                 <MdClose size={24} />
               </button>

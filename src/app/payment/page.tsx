@@ -24,6 +24,7 @@ const Payment = () => {
 
   const handlePayment = () => {
     if (!isAuthenticated) {
+      console.log("User is authenticated:", isAuthenticated);
       router.push('/login');
     } else {
       window.location.href = FLUTTERWAVE_PAYMENT_LINK;
