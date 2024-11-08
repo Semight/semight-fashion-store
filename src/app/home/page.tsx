@@ -27,7 +27,7 @@ const Home = () => {
       <div className="h-20"></div>
       <div className="">
         {/* Hero Section */}
-        <section className="relative bg-secondary py-20 mb-20">
+        <section className="relative bg-secondary py-20 md:py-32 mb-20">
           <div className="absolute inset-0">
             <Image
               src={BG1}
@@ -40,7 +40,7 @@ const Home = () => {
           </div>
           <div className="relative container mx-auto px-4 text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              Welcome to Our Semight Fashion Store
+              Welcome to Semight Fashion Store
             </h1>
             <p className="text-lg md:text-xl text-gray-600 mb-6">
               Discover the latest trends and collections.

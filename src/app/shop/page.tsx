@@ -81,10 +81,10 @@ const Shop = () => {
   return (
     <>
       <Navbar />
-      <div className="h-44"></div>
-      <div className="flex px-24">
+      <div className="h-20 md:h-44"></div>
+      <div className="flex flex-col md:flex-row md:px-12 lg:px-24">
         {/* Sidebar for Categories */}
-        <aside className="w-1/4 p-4 bg-secondary">
+        <aside className="md:w-1/4 p-4 bg-secondary mb-6 md:mb-0">
           <h2 className="text-xl font-semibold mb-4">Categories</h2>
           <ul>
             <li>
@@ -137,12 +137,12 @@ const Shop = () => {
         </aside>
 
         {/* Main Content */}
-        <main className="w-3/4 p-4">
-          <div className="flex justify-between items-center mb-4">
+        <main className="md:w-3/4 p-4">
+          <div className="flex flex-col md:flex-row md:justify-between items-center mb-4 gap-4">
             <input
               type="text"
               placeholder="Search products..."
-              className="p-2 border-none rounded w-full"
+              className="p-2 border-none rounded w-full md:w-auto"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -152,7 +152,7 @@ const Shop = () => {
             <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
               Products
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {currentProducts.length > 0 ? (
                 currentProducts.map((product) => (
                   <div
@@ -184,7 +184,7 @@ const Shop = () => {
             </div>
 
             {/* Pagination Controls */}
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center mt-6 space-x-2">
               <button
                 onClick={handlePreviousPage}
                 disabled={currentPage === 1}

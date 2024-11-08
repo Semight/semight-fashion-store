@@ -16,8 +16,7 @@ interface Product {
 }
 
 const ProductDetail = () => {
-  const { id } = useParams(); // Get the `id` parameter from the URL
-  // console.log(id);
+  const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -37,7 +36,7 @@ const ProductDetail = () => {
         if (!response.ok) throw new Error("Failed to fetch product details");
         const data = await response.json();
         setProduct(data);
-        setSelectedImage(data.images[0]); // Set the first image as default
+        setSelectedImage(data.images[0]);
       } catch (err) {
         setError((err as Error).message);
       } finally {
@@ -67,28 +66,28 @@ const ProductDetail = () => {
     <div className="container mx-auto px-4 py-8">
       <Link href="/shop" className="text-secondary hover:underline">Back to Shop</Link>
       <div className="flex flex-col md:flex-row mt-4">
-        <div className="w-full md:w-1/2">
-          <img src={selectedImage || ''} alt={product.name} className="w-full h-[400px] object-contain" />
-          <div className="flex mt-4 space-x-2 justify-self-center">
+        <div className="w-full md:w-1/2 flex justify-center">
+          <img src={selectedImage || ''} alt={product.name} className="w-full h-[250px] md:h-[400px] object-contain" />
+          <div className="flex mt-4 space-x-2 overflow-x-auto">
             {product.images.map((img, index) => (
               <img
                 key={index}
                 src={img}
                 alt={`Thumbnail ${index}`}
-                className="w-24 h-24 object-cover cursor-pointer border-2 border-light-black-4 hover:border-blue"
+                className="w-16 h-16 md:w-24 md:h-24 object-cover cursor-pointer border-2 border-light-black-4 hover:border-blue"
                 onClick={() => setSelectedImage(img)}
               />
             ))}
           </div>
         </div>
-        <div className="md:ml-8 mt-4 md:mt-0">
-          <h1 className="text-3xl font-bold">{product.name}</h1>
+        <div className="md:ml-8 mt-4 md:mt-0 text-center md:text-left">
+          <h1 className="text-2xl md:text-3xl font-bold">{product.name}</h1>
           <p className="text-lg text-light-black-7 mt-2"><span className='text-xl font-bold text-secondary'>Price :  </span>#{product.price}</p>
           <p className="text-light-black-7 mt-4"><span className='text-xl font-bold text-secondary'>Description :  </span>{product.description}</p>
 
           <div className="mt-4">
             <h2 className="text-lg font-semibold">Select Size</h2>
-            <div className="flex space-x-2 mt-2">
+            <div className="flex flex-wrap gap-2 mt-2 justify-center md:justify-start">
               {product.sizes.map((sizeOption) => (
                 <button
                   key={sizeOption}
@@ -101,7 +100,7 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          <div className="mt-4 flex items-center">
+          <div className="mt-4 flex items-center justify-center md:justify-start">
             <button
               className="p-2 border border-secondary rounded-md text-secondary"
               onClick={() => handleQuantityChange(-1)}
@@ -118,7 +117,7 @@ const ProductDetail = () => {
           </div>
 
           <button
-            className="mt-4 py-2 px-4 rounded-md text-white bg-secondary hover:bg-light-yellow-2"
+            className="mt-4 py-2 px-4 rounded-md text-white bg-secondary hover:bg-light-yellow-2 w-full md:w-auto"
             onClick={handleAddToCart}
           >
             Add to Cart
@@ -128,21 +127,25 @@ const ProductDetail = () => {
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-light-black-4 bg-opacity-50 z-50">
-          <div className="bg-white p-8 rounded-lg relative w-1/2">
+          <div className="bg-white p-8 rounded-lg relative w-11/12 md:w-1/2">
             <button
               className="absolute top-2 right-2 text-light-black-7"
               onClick={() => setShowModal(false)}
             >
               <MdClose size={24} />
             </button>
-            <h2 className="text-2xl font-semibold mb-4">Product Added to Cart</h2>
-            <p className="mb-4">You have added {quantity} {product.name}(s) to your cart.</p>
+            <h2 className="text-2xl font-semibold mb-4 text-center">Product Added to Cart</h2>
+            <p className="mb-4 text-center">You have added {quantity} {product.name}(s) to your cart.</p>
             <div className="flex justify-between mt-4">
               <Link href="/shop">
-                <button className="py-2 px-4 rounded-md text-white bg-black hover:bg-secondary">Continue Shopping</button>
+                <button className="py-2 px-4 rounded-md text-white bg-black hover:bg-secondary w-full md:w-auto mr-2">
+                  Continue Shopping
+                </button>
               </Link>
               <Link href="/cart">
-                <button className="py-2 px-4 rounded-md text-white bg-secondary hover:bg-black">View Cart and Checkout</button>
+                <button className="py-2 px-4 rounded-md text-white bg-secondary hover:bg-black w-full md:w-auto ml-2">
+                  View Cart and Checkout
+                </button>
               </Link>
             </div>
           </div>
@@ -153,4 +156,3 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
-
