@@ -6,6 +6,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { IoLogOut } from "react-icons/io5";
 import Logo from "../Logo/Logo";
 import { useAuth } from "@/Context/AuthContext";
+import { baseUrl } from "@/api/baseUrl";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,7 +22,7 @@ const Navbar: React.FC = () => {
       const token = localStorage.getItem("authToken");
       if (token) {
         try {
-          const response = await fetch("http://localhost:8000/api/users/profile", {
+          const response = await fetch(`${baseUrl}/api/users/profile`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,

@@ -1,4 +1,5 @@
 "use client";
+import { baseUrl } from "@/api/baseUrl";
 import Navbar from "@/components/Navbar/NavBar";
 import React, { useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
@@ -12,7 +13,7 @@ interface UserProfile {
 
 const fetchUserProfile = async (): Promise<UserProfile> => {
   const token = localStorage.getItem('authToken');
-  const response = await fetch('http://localhost:8000/api/users/profile', {
+  const response = await fetch(`${baseUrl}/api/users/profile`, {
     headers: {
       'Authorization': `Bearer ${token}`,
     },
@@ -25,7 +26,7 @@ const fetchUserProfile = async (): Promise<UserProfile> => {
 
 const updateUserProfile = async (userProfile: UserProfile): Promise<UserProfile> => {
   const token = localStorage.getItem('authToken');
-  const response = await fetch('http://localhost:8000/api/users/profile', {
+  const response = await fetch(`${baseUrl}/api/users/profile`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

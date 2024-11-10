@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar/NavBar";
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { baseUrl } from "@/api/baseUrl";
 
 interface Product {
   id: string;
@@ -27,7 +28,7 @@ const Shop = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("http://localhost:8000/api/products");
+        const response = await fetch(`${baseUrl}/api/products`);
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }

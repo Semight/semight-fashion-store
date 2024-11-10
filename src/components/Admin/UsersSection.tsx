@@ -1,4 +1,5 @@
 "use client";
+import { baseUrl } from '@/api/baseUrl';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineDelete } from 'react-icons/ai';
 
@@ -16,7 +17,7 @@ const fetchUsers = async (): Promise<User[]> => {
         throw new Error('No auth token found');
     }
 
-    const response = await fetch('http://localhost:8000/api/users/users', {
+    const response = await fetch(`${baseUrl}/api/users/users`, {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -39,7 +40,7 @@ const deleteUser = async (userId: string): Promise<void> => {
         throw new Error('No auth token found');
     }
 
-    const response = await fetch(`http://localhost:8000/api/users/users/byId/${userId}`, {
+    const response = await fetch(`${baseUrl}/api/users/users/byId/${userId}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`,

@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "@/components/Navbar/NavBar";
 import Footer from "@/components/Footer/Footer";
+import { baseUrl } from "@/api/baseUrl";
 
 const Signup = () => {
   const [name, setName] = useState<string>("");
@@ -29,7 +30,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/api/users/register", {
+      const response = await fetch(`${baseUrl}/api/users/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

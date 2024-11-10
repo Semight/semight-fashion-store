@@ -1,0 +1,1 @@
+export const baseUrl = "https://semight-fashion-store-be.onrender.com"

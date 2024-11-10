@@ -5,6 +5,7 @@ import { MdClose } from 'react-icons/md';
 import Link from 'next/link';
 import { useCart } from '@/Context/CartContext';
 import { useParams } from 'next/navigation';
+import { baseUrl } from '@/api/baseUrl';
 
 interface Product {
   _id: string;
@@ -32,7 +33,7 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:8000/api/products/${id}`);
+        const response = await fetch(`${baseUrl}/api/products/${id}`);
         if (!response.ok) throw new Error("Failed to fetch product details");
         const data = await response.json();
         setProduct(data);

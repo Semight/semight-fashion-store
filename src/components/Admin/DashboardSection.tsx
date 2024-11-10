@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { baseUrl } from '@/api/baseUrl';
 
 interface DashboardData {
   totalSales: number;
@@ -17,7 +18,7 @@ const DashboardSection: React.FC = () => {
       try {
         const token = localStorage.getItem('authToken');
   
-        const response = await axios.get('http://localhost:8000/api/dashboard', {
+        const response = await axios.get(`${baseUrl}/api/dashboard`, {
           headers: {
             Authorization: `Bearer ${token}`, // Include the token here
           },

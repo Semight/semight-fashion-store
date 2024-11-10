@@ -1,4 +1,5 @@
 "use client";
+import { baseUrl } from '@/api/baseUrl';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineBarChart } from 'react-icons/ai';
 
@@ -6,7 +7,7 @@ import { AiOutlineBarChart } from 'react-icons/ai';
 const fetchOrders = async () => {
     // Implement your data fetching logic here
     // For example:
-    const response = await fetch('http://localhost:8000/api/orders');
+    const response = await fetch(`${baseUrl}/api/orders`);
     const data = await response.json();
     return data;
 };

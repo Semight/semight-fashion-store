@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { baseUrl } from "@/api/baseUrl";
 
 interface Product {
   id: string;
@@ -23,7 +24,7 @@ const ShopCategoryPage = () => {
     if (typeof category === "string") {
       const fetchProducts = async () => {
         try {
-          const response = await axios.get(`http://localhost:8000/api/products/category/${category}`);
+          const response = await axios.get(`${baseUrl}/api/products/category/${category}`);
           setProducts(response.data);
           setLoading(false);
         } catch (err) {

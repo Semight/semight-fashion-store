@@ -1,4 +1,5 @@
 "use client";
+import { baseUrl } from "@/api/baseUrl";
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 
@@ -14,8 +15,8 @@ interface Product {
 
 const fetchProducts = async (category?: string) => {
   const url = category
-    ? `http://localhost:8000/api/products/category/${category}`
-    : "http://localhost:8000/api/products";
+    ? `${baseUrl}/api/products/category/${category}`
+    : `${baseUrl}/api/products`;
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error("Failed to fetch products");
@@ -26,7 +27,7 @@ const fetchProducts = async (category?: string) => {
 
 const addProduct = async (product: Product) => {
   console.log("Product data to send:", product);
-  const response = await fetch("http://localhost:8000/api/products", {
+  const response = await fetch(`${baseUrl}/api/products`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -85,7 +86,7 @@ const ProductsSection: React.FC = () => {
 
   const deleteProduct = async (productId: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/products/${productId}`, {
+      const response = await fetch(`${baseUrl}/api/products/${productId}`, {
         method: "DELETE",
       });
       if (!response.ok) {
