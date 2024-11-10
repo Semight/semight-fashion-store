@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
           <Link href="/cart" className="block px-4 py-2 text-black hover:bg-light-black-4">Cart</Link>
           <Link href="/about" className="block px-4 py-2 text-black hover:bg-light-black-4">About</Link>
           {isAdmin && (
-            <Link href="/admin/dashboard" className="block px-4 py-2 text-black hover:bg-light-black-4">Admin</Link>
+            <Link href="/admin" className="block px-4 py-2 text-black hover:bg-light-black-4">Admin</Link>
           )}
           {!loggedIn ? (
             <Link href="/login" className="mt-4 flex justify-center py-2 px-4 rounded-md text-white bg-secondary text-lg font-semibold font-merriweather">
@@ -147,7 +147,6 @@ const Navbar: React.FC = () => {
                 <IoLogOut onClick={logout} size={"22px"} className="text-black cursor-pointer" />
               </div>
               <Link href="/profile" className="block px-4 py-2 hover:bg-gray-100">Profile</Link>
-              <Link href="/settings" className="block px-4 py-2 hover:bg-gray-100">Settings</Link>
             </div>
           )}
         </div>

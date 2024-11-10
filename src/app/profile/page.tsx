@@ -90,14 +90,16 @@ const Profile: React.FC = () => {
 
       <div className="h-[5rem]"></div>
 
-      <div className="shadow-custom border-none rounded-xl p-5 flex items-center m-[10rem]">
-        <div className="">
-          <h2 className="text-2xl font-bold mb-4">Profile</h2>
-          {isLoading && <p>Loading profile...</p>}
-          {error && <p className="text-danger">{error}</p>}
+      {/* Main profile container */}
+      <div className="flex justify-center items-center py-8 px-4">
+        <div className="w-full sm:w-full md:w-2/3 lg:w-1/2 shadow-custom border-none rounded-xl p-5">
+          <h2 className="text-2xl font-bold mb-4 text-center">Profile</h2>
+
+          {isLoading && <p className="flex gap-1 justify-center items-center">Profile loading <span className="spinners"></span></p>}
+          {error && <p className="text-center text-danger">{error}</p>}
           {profile && !isLoading && !error && (
             <Form>
-              <Form.Group controlId="formProfileName" className="flex items-center gap-1 mb-2">
+              <Form.Group controlId="formProfileName" className="flex flex-col sm:gap-2 mb-3">
                 <Form.Label>Name:</Form.Label>
                 <Form.Control
                   type="text"
@@ -108,7 +110,7 @@ const Profile: React.FC = () => {
                   className="text-lg text-secondary font-semibold pl-2"
                 />
               </Form.Group>
-              <Form.Group controlId="formProfileEmail" className="flex items-center gap-1 mb-2">
+              <Form.Group controlId="formProfileEmail" className="flex flex-col sm:gap-2 mb-3">
                 <Form.Label>Email:</Form.Label>
                 <Form.Control
                   type="email"
@@ -119,18 +121,19 @@ const Profile: React.FC = () => {
                   className="text-lg text-secondary font-semibold pl-2"
                 />
               </Form.Group>
-              <Form.Group className="mt-3">
+
+              <Form.Group className="mt-4 flex justify-center">
                 {isEditing ? (
                   <>
-                    <Button variant="secondary" onClick={() => setIsEditing(false)} className="px-4 p-2 rounded-lg text-white bg-danger">
+                    <Button variant="secondary" onClick={() => setIsEditing(false)} className="px-4 py-2 rounded-lg text-white bg-danger mr-2">
                       Cancel
                     </Button>
-                    <Button variant="primary" onClick={handleSave} className="px-4 p-2 rounded-lg text-white bg-secondary ml-2">
+                    <Button variant="primary" onClick={handleSave} className="px-4 py-2 rounded-lg text-white bg-secondary">
                       Save
                     </Button>
                   </>
                 ) : (
-                  <Button variant="primary" onClick={() => setIsEditing(true)} className="px-4 p-2 rounded-lg text-white bg-secondary">
+                  <Button variant="primary" onClick={() => setIsEditing(true)} className="px-4 py-2 rounded-lg text-white bg-secondary">
                     Edit
                   </Button>
                 )}

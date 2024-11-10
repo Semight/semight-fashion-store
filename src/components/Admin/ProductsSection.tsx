@@ -69,7 +69,6 @@ const ProductsSection: React.FC = () => {
       setProducts([...products, addedProduct]);
       setShowModal(false);
       setNewProduct({
-        
         _id: "",
         name: "",
         price: "",
@@ -80,7 +79,7 @@ const ProductsSection: React.FC = () => {
       });
     } catch (error) {
       console.error("Failed to add product:", error);
-      alert("Error adding product. Please try again."); // Display an error message to the user
+      alert("Error adding product. Please try again.");
     }
   };
 
@@ -107,7 +106,7 @@ const ProductsSection: React.FC = () => {
     } else {
         console.error("Product ID is undefined. Cannot proceed with deletion.");
     }
-};
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -168,7 +167,7 @@ const ProductsSection: React.FC = () => {
   }, [selectedCategory]);
 
   return (
-    <div className="p-4">
+    <div className="p-4 sm:p-0">
       <h2 className="text-2xl font-bold mb-4">Products</h2>
       <button
         className="mb-4 py-2 px-4 bg-secondary text-white rounded flex items-center"
@@ -177,44 +176,46 @@ const ProductsSection: React.FC = () => {
         <AiOutlinePlus className="mr-2" /> Add New Product
       </button>
 
-      <table className="w-full bg-white border rounded shadow-md">
-        <thead>
-          <tr>
-            <th className="p-2 border-b">ID</th>
-            <th className="p-2 border-b">Name</th>
-            <th className="p-2 border-b">Price</th>
-            <th className="p-2 border-b">Sizes</th>
-            <th className="p-2 border-b">Category</th>
-            <th className="p-2 border-b">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product._id}>
-              <td className="p-2 border-b">{product._id}</td>
-              <td className="p-2 border-b">{product.name}</td>
-              <td className="p-2 border-b">{product.price}</td>
-              <td className="p-2 border-b">
-                {product.sizes?.join(", ") || "N/A"}
-              </td>
-              <td className="p-2 border-b">{product.category}</td>
-              <td className="p-2 border-b">
-                <button className="text-secondary hover:underline">Edit</button>
-                <button
-                  className="text-danger hover:underline ml-4"
-                  onClick={() => handleDeleteProduct(product._id)}
-                >
-                  Delete
-                </button>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="w-full bg-white border rounded shadow-md">
+          <thead>
+            <tr>
+              <th className="p-2 border-b sm:hidden">ID</th>
+              <th className="p-2 border-b">Name</th>
+              <th className="p-2 border-b">Price</th>
+              <th className="p-2 border-b">Sizes</th>
+              <th className="p-2 border-b">Category</th>
+              <th className="p-2 border-b">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product._id}>
+                <td className="p-2 border-b sm:hidden">{product._id}</td>
+                <td className="p-2 border-b sm:text-xs">{product.name}</td>
+                <td className="p-2 border-b sm:text-xs">{product.price}</td>
+                <td className="p-2 border-b sm:text-xs">
+                  {product.sizes?.join(", ") || "N/A"}
+                </td>
+                <td className="p-2 border-b sm:text-xs">{product.category}</td>
+                <td className="p-2 border-b sm:text-xs sm:flex sm:flex-col">
+                  <button className="text-secondary hover:underline">Edit</button>
+                  <button
+                    className="text-danger hover:underline ml-4"
+                    onClick={() => handleDeleteProduct(product._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 mt-[5rem]">
-          <div className="bg-white rounded-lg overflow-hidden w-1/2">
+          <div className="bg-white rounded-lg overflow-hidden w-full sm:w-96">
             <div className="flex justify-between items-center p-4 border-b">
               <h3 className="text-lg font-semibold">Add New Product</h3>
               <button
@@ -270,40 +271,25 @@ const ProductsSection: React.FC = () => {
                 />
               </div>
               <div className="mb-4">
-                <label className="block text-black">Images</label>
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleImageChange}
-                  className="mt-1"
-                />
-                <div className="mt-3 flex space-x-2">
-                  {newProduct.images.map((image, index) => (
-                    <div key={index} className="relative">
-                      <img
-                        src={image}
-                        alt={`Preview ${index}`}
-                        className="w-24 h-24 object-cover"
-                      />
-                      <button
-                        type="button"
-                        className="absolute top-0 right-0 bg-danger text-white w-4 h-4 flex justify-center items-center rounded-3xl"
-                        onClick={() => handleRemoveImage(index)}
-                      >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                <label className="block text-black">Category</label>
+                <select
+                  value={newProduct.category}
+                  onChange={handleCategoryChange}
+                  className="mt-1 p-2 border rounded w-full"
+                >
+                  <option value="">Select category</option>
+                  <option value="clothing">Clothing</option>
+                  <option value="footwear">Footwear</option>
+                  <option value="accessories">Accessories</option>
+                </select>
               </div>
               <div className="mb-4">
                 <label className="block text-black">Sizes</label>
                 <select
-                  value={newProduct.sizes[0] || ""}
                   onChange={handleSizeChange}
                   className="mt-1 p-2 border rounded w-full"
                 >
-                  <option value="">Select Size</option>
+                  <option value="">Select size</option>
                   <option value="S">S</option>
                   <option value="M">M</option>
                   <option value="L">L</option>
@@ -311,32 +297,39 @@ const ProductsSection: React.FC = () => {
                 </select>
               </div>
               <div className="mb-4">
-                <label className="block text-black">Category</label>
-                <select
-                  value={newProduct.category || ""}
-                  onChange={handleCategoryChange}
+                <label className="block text-black">Images</label>
+                <input
+                  type="file"
+                  onChange={handleImageChange}
+                  multiple
                   className="mt-1 p-2 border rounded w-full"
-                >
-                  <option value="">Select Category</option>
-                  <option value="Men">Men</option>
-                  <option value="Women">Women</option>
-                  <option value="Kid">Kid</option>
-                </select>
+                />
+                <div className="flex mt-2 space-x-2">
+                  {newProduct.images.map((image, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={image}
+                        alt="product"
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <button
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute top-0 right-0 text-white bg-black rounded-full text-xs p-1"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="flex justify-end p-4 border-t">
-              <button
-                className="px-4 py-2 bg-danger text-white rounded mr-2"
-                onClick={() => setShowModal(false)}
-              >
-                Close
-              </button>
-              <button
-                className="px-4 py-2 bg-secondary text-white rounded"
-                onClick={handleAddProduct}
-              >
-                Add Product
-              </button>
+              <div className="flex justify-end">
+                <button
+                  onClick={handleAddProduct}
+                  className="bg-primary text-white px-6 py-2 rounded mt-4"
+                >
+                  Add Product
+                </button>
+              </div>
             </div>
           </div>
         </div>
