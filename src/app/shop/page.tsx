@@ -129,7 +129,7 @@ const Shop = () => {
                     ? "bg-black text-white"
                     : "bg-white"
                 }`}
-                onClick={() => handleCategorySelect("kid")}
+                onClick={() => handleCategorySelect("kids")}
               >
                 Kids
               </button>

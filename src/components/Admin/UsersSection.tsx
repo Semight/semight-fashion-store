@@ -103,21 +103,21 @@ const UsersSection: React.FC = () => {
             <table className="w-full bg-white border rounded shadow-md">
                 <thead>
                     <tr>
-                        <th className="p-2 border-b">ID</th>
-                        <th className="p-2 border-b">Name</th>
-                        <th className="p-2 border-b">Email</th>
-                        <th className="p-2 border-b">Role</th>
-                        <th className="p-2 border-b">Actions</th>
+                        <th className="p-2 border-b  sm:hidden">ID</th>
+                        <th className="p-2 border-b sm:text-xs">Name</th>
+                        <th className="p-2 border-b sm:text-xs">Email</th>
+                        <th className="p-2 border-b sm:text-xs">Role</th>
+                        <th className="p-2 border-b sm:text-xs">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {users.map(user => (
                         <tr key={user._id}>
-                            <td className="p-2 border-b">{user._id}</td> {/* Use _id instead of id */}
-                            <td className="p-2 border-b">{user.name}</td>
-                            <td className="p-2 border-b">{user.email}</td>
-                            <td className="p-2 border-b">{user.role}</td>
-                            <td className="p-2 border-b">
+                            <td className="p-2 border-b  sm:hidden">{user._id}</td> {/* Use _id instead of id */}
+                            <td className="p-2 border-b sm:text-xs">{user.name}</td>
+                            <td className="p-2 border-b sm:text-xs">{user.email}</td>
+                            <td className="p-2 border-b sm:text-xs">{user.role}</td>
+                            <td className="p-2 border-b sm:text-xs">
                                 <button
                                     className={`text-danger ml-4 flex items-center ${deletingUserId === user._id ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     onClick={() => handleDelete(user._id)} // Use _id here as well

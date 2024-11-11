@@ -216,7 +216,7 @@ const ProductsSection: React.FC = () => {
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 mt-[5rem]">
-          <div className="bg-white rounded-lg overflow-hidden w-full sm:w-96">
+          <div className="bg-white rounded-lg overflow-hidden w-1/2 sm:w-96">
             <div className="flex justify-between items-center p-4 border-b">
               <h3 className="text-lg font-semibold">Add New Product</h3>
               <button
@@ -274,14 +274,14 @@ const ProductsSection: React.FC = () => {
               <div className="mb-4">
                 <label className="block text-black">Category</label>
                 <select
-                  value={newProduct.category}
+                  value={newProduct.category || ""}
                   onChange={handleCategoryChange}
                   className="mt-1 p-2 border rounded w-full"
                 >
-                  <option value="">Select category</option>
-                  <option value="clothing">Clothing</option>
-                  <option value="footwear">Footwear</option>
-                  <option value="accessories">Accessories</option>
+                  <option value="">Select Category</option>
+                  <option value="Men">Men</option>
+                  <option value="Women">Women</option>
+                  <option value="Kid">Kid</option>
                 </select>
               </div>
               <div className="mb-4">
