@@ -215,7 +215,7 @@ const ProductsSection: React.FC = () => {
                 </td>
                 <td className="p-2 border-b sm:text-xs">{product.category}</td>
                 <td className="p-2 border-b sm:text-xs sm:flex sm:flex-col">
-                  <button className="text-secondary hover:underline">Edit</button>
+                  {/* <button className="text-secondary hover:underline">Edit</button> */}
                   <button
                     className="text-danger hover:underline ml-4"
                     onClick={() => handleDeleteProduct(product._id)}
