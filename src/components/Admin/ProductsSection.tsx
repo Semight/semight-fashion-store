@@ -2,6 +2,8 @@
 import { baseUrl } from "@/api/baseUrl";
 import React, { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface Product {
   _id: string;
@@ -26,7 +28,6 @@ const fetchProducts = async (category?: string) => {
 };
 
 const addProduct = async (product: Product) => {
-  console.log("Product data to send:", product);
   const response = await fetch(`${baseUrl}/api/products`, {
     method: "POST",
     headers: {
@@ -34,6 +35,9 @@ const addProduct = async (product: Product) => {
     },
     body: JSON.stringify(product),
   });
+  if (!response.ok) {
+    throw new Error("Failed to add product");
+  }
   return await response.json();
 };
 
@@ -41,6 +45,7 @@ const ProductsSection: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [newProduct, setNewProduct] = useState<Product>({
     _id: "",
     name: "",
@@ -53,8 +58,13 @@ const ProductsSection: React.FC = () => {
 
   useEffect(() => {
     const loadProducts = async () => {
-      const fetchedProducts = await fetchProducts();
-      setProducts(fetchedProducts);
+      try {
+        const fetchedProducts = await fetchProducts();
+        setProducts(fetchedProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        toast.error("Error fetching products. Please try again.");
+      }
     };
 
     loadProducts();
@@ -62,9 +72,10 @@ const ProductsSection: React.FC = () => {
 
   const handleAddProduct = async () => {
     if (!newProduct.category) {
-      alert("Please select a category for the product.");
+      toast.error("Please select a category for the product.");
       return;
     }
+    setLoading(true);
     try {
       const addedProduct = await addProduct(newProduct);
       setProducts([...products, addedProduct]);
@@ -78,9 +89,12 @@ const ProductsSection: React.FC = () => {
         sizes: [],
         category: "",
       });
+      toast.success("Product added successfully!");
     } catch (error) {
       console.error("Failed to add product:", error);
-      alert("Error adding product. Please try again.");
+      toast.error("Error adding product. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -92,22 +106,22 @@ const ProductsSection: React.FC = () => {
       if (!response.ok) {
         throw new Error("Failed to delete product");
       }
-      console.log("Product deleted successfully");
-      setProducts(products.filter((item) => item._id !== productId))
+      setProducts(products.filter((item) => item._id !== productId));
+      toast.success("Product deleted successfully!");
     } catch (error) {
       console.error("Error deleting product:", error);
-      alert("Error deleting product. Please try again.");
+      toast.error("Error deleting product. Please try again.");
     }
   };
 
   const handleDeleteProduct = (productId: string | undefined) => {
-    console.log("Attempting to delete product with ID:", productId);
     if (productId) {
-        deleteProduct(productId);
+      deleteProduct(productId);
     } else {
-        console.error("Product ID is undefined. Cannot proceed with deletion.");
+      console.error("Product ID is undefined. Cannot proceed with deletion.");
     }
   };
+
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -169,6 +183,7 @@ const ProductsSection: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-0">
+      <ToastContainer />
       <h2 className="text-2xl font-bold mb-4">Products</h2>
       <button
         className="mb-4 py-2 px-4 bg-secondary text-white rounded flex items-center"
@@ -327,16 +342,19 @@ const ProductsSection: React.FC = () => {
                 <button
                   onClick={handleAddProduct}
                   className="bg-primary text-white px-6 py-2 rounded mt-4"
+                  disabled={loading}
                 >
-                  Add Product
+                  {loading ? <div className="spinner"></div> : "Add Product"}
                 </button>
               </div>
             </div>
           </div>
-        </div>
+          </div>
       )}
     </div>
   );
 };
 
 export default ProductsSection;
+
+

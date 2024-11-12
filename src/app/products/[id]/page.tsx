@@ -70,11 +70,12 @@ const ProductDetail = () => {
         <div className="w-full md:w-1/2 flex justify-center">
           <img src={selectedImage || ''} alt={product.name} className="w-full h-[250px] md:h-[400px] object-contain" />
           <div className="flex mt-4 space-x-2 overflow-x-auto">
-            {product.images.map((img, index) => (
+            {product.images.map((img) => (
               <img
-                key={index}
+                key={img}
                 src={img}
-                alt={`Thumbnail ${index}`}
+                // alt={`Thumbnail ${index}`}
+                alt="Thumbnail"
                 className="w-16 h-16 md:w-24 md:h-24 object-cover cursor-pointer border-2 border-light-black-4 hover:border-blue"
                 onClick={() => setSelectedImage(img)}
               />
