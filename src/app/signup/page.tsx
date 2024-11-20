@@ -119,7 +119,7 @@ const Signup = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-secondary"
                   >
                     {showPassword ? <MdVisibilityOff size={24} /> : <MdVisibility size={24} />}
                   </button>
@@ -137,13 +137,13 @@ const Signup = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-secondary"
                   >
                     {showConfirmPassword ? <MdVisibilityOff size={24} /> : <MdVisibility size={24} />}
                   </button>
                 </div>
               </div>
-              {error && <p className="text-red-600 mb-4">{error}</p>}
+              {error && <p className="text-danger mb-4">{error}</p>}
               <div className="flex items-center justify-center mt-8">
                 <button
                   type="submit"

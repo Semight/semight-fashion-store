@@ -77,7 +77,7 @@ const Shop = () => {
   };
 
   if (loading) return <div className="flex justify-center m-[23%] ">Loading...</div>;
-  if (error) return <div className="flex justify-center m-[23%] text-red-500">{error}</div>;
+  if (error) return <div className="flex justify-center m-[23%] text-danger">{error}</div>;
 
   return (
     <>

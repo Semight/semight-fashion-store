@@ -48,7 +48,7 @@ const Login = () => {
           }, 2000);
         }
       } else {
-        toast.error(data.error || "Login failed. Please check your credentials.");
+        toast.error("Login failed. Please check your credentials.");
       }
     } catch (error) {
       toast.error("Network error. Please try again.");
@@ -101,7 +101,7 @@ const Login = () => {
                   type="button"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-secondary"
                 >
                   {showPassword ? (
                     <MdVisibilityOff size={24} />
