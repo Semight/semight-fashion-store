@@ -52,7 +52,7 @@ const Payment = () => {
     handleFlutterPayment({
       callback: (response) => {
         if (response.status === "successful") {
-          console.log("Payment successful:", response);
+          // console.log("Payment successful:", response);
           // Perform further actions like updating backend or clearing cart
           closePaymentModal(); // Close the Flutterwave modal programmatically
         } else {
@@ -60,7 +60,7 @@ const Payment = () => {
         }
       },
       onClose: () => {
-        console.log("Payment modal closed");
+        // console.log("Payment modal closed");
       },
     });
   };

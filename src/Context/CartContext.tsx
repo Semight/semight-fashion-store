@@ -36,9 +36,9 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       return { ...state, cart: [...state.cart, action.payload] };
       
     case 'REMOVE_FROM_CART':
-      console.log("Attempting to remove product with ID:", action.payload);
+      // console.log("Attempting to remove product with ID:", action.payload);
       const updatedCart = state.cart.filter((item) => item.product._id !== action.payload);
-      console.log("Updated cart after removal:", updatedCart);
+      // console.log("Updated cart after removal:", updatedCart);
       return { ...state, cart: updatedCart };
       
     case 'CLEAR_CART':
@@ -71,7 +71,7 @@ const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
 const useCart = () => {
   const context = useContext(CartContext);
-  console.log(context);
+  // console.log(context);
   if (!context) {
     throw new Error('useCart must be used within a CartProvider');
   }
