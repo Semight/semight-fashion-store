@@ -32,18 +32,28 @@ const Login = () => {
       if (response.ok) {
         localStorage.setItem("authToken", data.token);
 
+
+
+        // Extract user data
+      const user = {
+        name: data.user?.name || "Unknown User",
+        email: data.user?.email || email, // Use provided email as fallback
+        phone: data.user?.phone || "",   // Optional phone
+      };
+
+        
         const userRole = data.user?.role?.toLowerCase() || ""; 
 
         if (userRole === "admin") {
           toast.success("Login successful! Redirecting to admin dashboard...");
           setTimeout(() => {
-            login();
+            login(user);
             router.push("/admin");
           }, 2000);
         } else if (userRole === "user") {
           toast.success("Login successful! Redirecting to cart...");
           setTimeout(() => {
-            login();
+            login(user);
             router.push("/cart");
           }, 2000);
         }
